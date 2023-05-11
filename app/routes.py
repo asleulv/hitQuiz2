@@ -1,12 +1,20 @@
 from app import app, db
-from flask import render_template, redirect, request, url_for, session, jsonify
+from flask import render_template, redirect, request, url_for, session, jsonify, send_from_directory
 from app.models import Hits
 import random
 from sqlalchemy.sql.expression import func, select
 from app.quiz_settings import levels
 
+# Path for our main Svelte page
+@app.route("/")
+def base():
+    return send_from_directory('../client/public', 'index.html')
 
-@app.route('/')
+# Path for all the static files (compiled JS/CSS, etc.)
+@app.route("/<path:path>")
+def home(path):
+    return send_from_directory('../client/public', path)
+
 @app.route('/quiz')
 def quiz():
 	session.modified = True
