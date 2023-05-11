@@ -3,11 +3,11 @@
 
 	let score = 0;
 	let level = 1;
-	let promise = fetch('././quiz').then(x => x.json());
+	let promise = fetch('./quiz').then(x => x.json());
 
 	function onSubmit(e) {
 		const {submitter} = e;
-		promise = fetch('././quiz', {
+		promise = fetch('./quiz', {
 			method: 'post', 
 			headers: { 'Content-Type': 'application/json' }, 
 			body: JSON.stringify({ value: submitter.value })
@@ -15,7 +15,7 @@
 	}
 
 	function onClick(e) {
-		promise = fetch('././quiz').then(x => x.json());
+		promise = fetch('./quiz').then(x => x.json());
 	}
 
 	$: promise.then(data => { if (score != data.score) score = data.score; });
