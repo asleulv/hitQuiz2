@@ -12,7 +12,7 @@ def quiz():
 
 	q = Hits.query\
 		.filter( 
-			Hits.peak == levels[level]['peak'], 
+			Hits.peak <= levels[level]['peak'], 
 			Hits.weeks > levels[level]['weeks'], 
 			Hits.year.in_(range(levels[level]['f_range'],levels[level]['t_range'])), 
 			# Hits.id.not_in(session['seen_songs']) # Viewed questions list is empty.
@@ -48,13 +48,15 @@ def quiz():
 	# Fail counter
 	session['fails'] = 0
 
-	# Building the actual question
-	question = f"{q.song} - {q.year}"
+	# Building the actual question + question info (peak+year)
+	question = f"'{q.song}'"
+	question_info = f"#{q.peak} in {q.year}"
 
 	return jsonify(
 		level=level,
 		points=points,
 		question=question,
+		question_info=question_info,
 		alternatives=alternatives,
 		finished=False
 	)  
@@ -123,8 +125,9 @@ def quiz_solve():
 		# The id of the current question
 		session['qid'] = q.id
 
-		# Building the actual question
-		question = f"{q.song} - {q.year}"
+		# Building the actual question + question info (peak+year)
+		question = f"'{q.song}'"
+		question_info = f"#{q.peak} in {q.year}"
 
 	# Check if game is over
 	# - When three failed attempts have been achieved.
@@ -135,6 +138,7 @@ def quiz_solve():
 		level=level,
 		points=points,
 		question=question if not done else None,
+		question_info=question_info if not done else None,
 		alternatives=alternatives if not done else [],
 		finished=done
 	)

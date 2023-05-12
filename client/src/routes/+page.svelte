@@ -49,6 +49,9 @@
 				{/key}
 			{:else}
 				<div>
+					{#key data.question_info}
+						<h2 class="question_info" in:fade={{ duration: 800 }}>{data.question_info}</h2>
+					{/key}
 					{#key data.question}
 						<h1 class="question" in:fade={{ duration: 800 }}>{data.question}</h1>
 					{/key}
@@ -152,8 +155,16 @@
 	}
 
 	.question {
-		min-height: 12.5rem;
+		min-height: 1rem;
 		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.question_info {
+		min-height: 1rem;
+		display: flex;
+		font-weight: lighter;
 		align-items: center;
 		justify-content: center;
 	}
