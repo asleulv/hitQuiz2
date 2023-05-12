@@ -3,11 +3,11 @@
 
 	let score = 0;
 	let level = 1;
-	let promise = fetch('./quiz').then(x => x.json());
+	let promise = fetch('/quiz').then(x => x.json());
 
 	function onSubmit(e) {
 		const {submitter} = e;
-		promise = fetch('./quiz', {
+		promise = fetch('/quiz', {
 			method: 'post', 
 			headers: { 'Content-Type': 'application/json' }, 
 			body: JSON.stringify({ value: submitter.value })
@@ -15,10 +15,10 @@
 	}
 
 	function onClick(e) {
-		promise = fetch('./quiz').then(x => x.json());
+		promise = fetch('/quiz').then(x => x.json());
 	}
 
-	$: promise.then(data => { if (score != data.score) score = data.score; });
+	$: promise.then(data => { if (score != data.points) score = data.points; });
 	$: promise.then(data => { if (level != data.level) level = data.level; });
 </script>
 
@@ -41,8 +41,8 @@
 			{#if data.finished}
 				{#key data.finished}
 					<div in:fade={{ duration: 800 }} class="quest-info">
-						<h1>{#if data.score > 0}Congratulations!{:else}Sorry!{/if}</h1>
-						<h1>You finished the exercise with {data.score} points.</h1>
+						<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
+						<h1>You finished the exercise with {score} points.</h1>
 						<button on:click={onClick}>Try Again</button>
 					</div>
 				{/key}
@@ -53,8 +53,8 @@
 					{/key}
 					{#key data.answers}
 						<form class="quest-form" on:submit|preventDefault={onSubmit}>
-							{#each Object.values(data.answers) as answer, i}
-								<button type="submit" value="{i + 1}" in:scale={{ duration: 400, delay: i*100 }}>{answer}</button>
+							{#each Object.values(data.alternatives) as answer, i}
+								<button type="submit" value="{ answer }" in:scale={{ duration: 400, delay: i*100 }}>{answer}</button>
 							{/each}
 						</form>
 					{/key}

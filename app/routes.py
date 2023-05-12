@@ -18,7 +18,7 @@ def home(path):
 @app.route('/quiz')
 def quiz():
 	session.modified = True
-	level = session['lvl'] = 1
+	level = session['level'] = 1
 	points = session['points'] = 0
 
 	if 'seen_songs' not in session:
@@ -74,7 +74,7 @@ def quiz_solve():
 	# q = Quest.query.get_or_404(qid)
 	q = db.get_or_404(Hits, qid)
 
-	if int(request.json.get('value', 0)) == q.artist: 
+	if request.json.get('value', '') == q.artist:
 		session['qids'].append(q.id)
 		points = session['points'] = (points + 10) 
 		if points >= level*50:
@@ -117,6 +117,8 @@ def quiz_solve():
 
 	# Check if game is over
 	done = session['fails'] >= 3 or q.id in session['qids']
+
+	print(level,points,question, alternatives)
 
 	return jsonify(level=level,
 				   points=points,
