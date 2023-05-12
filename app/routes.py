@@ -7,53 +7,58 @@ from app.quiz_settings import levels
 
 @app.route('/quiz')
 def quiz():
-	session.modified = True
 	level = session['level'] = 1
 	points = session['points'] = 0
 
-	if 'seen_songs' not in session:
-		session['seen_songs'] = []   
+	q = Hits.query\
+		.filter( 
+			Hits.peak == levels[level]['peak'], 
+			Hits.weeks > levels[level]['weeks'], 
+			Hits.year.in_(range(levels[level]['f_range'],levels[level]['t_range'])), 
+			# Hits.id.not_in(session['seen_songs']) # Viewed questions list is empty.
+		).order_by(func.random()).limit(1).first()
+	session['seen_songs'] = [q.id]
 
-	while True:      
-		q = Hits.query.filter(Hits.peak == levels[level]['peak'], Hits.weeks > levels[level]['weeks'], Hits.year.in_(range(levels[level]['f_range'],levels[level]['t_range']))).order_by(func.random()).limit(1).first()
-		if q.id not in session['seen_songs']:
-			session['seen_songs'].append(q.id)
-			break
-		else:
-			# The song has already been seen, so continue the loop to try again
-			continue
+	# What if no question was found? 
+	# - No hit available within the level.
+	#	-> At least one question is required in level 1.
 
 	# Generate the 4 alternatives including the correct answer
 	alternatives = [q.artist]
 
-	# Building the actual question
-	question = f"{q.song} - {q.year}"
-
 	# Getting 3 random artists from same level
 	while len(alternatives) < 4:
-		alt = Hits.query.filter(Hits.peak == levels[level]['peak'], Hits.weeks > levels[level]['weeks'], Hits.year.in_(range(levels[level]['f_range'],levels[level]['t_range']))).order_by(func.random()).limit(1).first()
-		if alt.artist in alternatives:
-			continue
-		if alt.id in session['seen_songs']:
-			continue
+		alt = Hits.query\
+			.filter(
+				Hits.peak == levels[level]['peak'], 
+				Hits.weeks > levels[level]['weeks'], 
+				Hits.year.in_(range(levels[level]['f_range'],levels[level]['t_range'])), 
+				Hits.artist.not_in(alternatives), 
+				# Hits.id.not_in(session['seen_songs']) # Why should this limitation exist?
+			).order_by(func.random()).limit(1).first()
 		alternatives.append(alt.artist)
-	
-	# The id of the current question
-	session['qid'] = q.id
-	# The id of every correct guess
-	session['qids'] = []
-	# Fail counter
-	session['fails'] = 0
 
 	# Shuffle the alternatives
 	random.shuffle(alternatives)
 
-	return jsonify(level=level,
-				   points=points,
-				   question=question,
-				   alternatives=alternatives,
-				   finished=False
-				   )  
+	# The id of the current question
+	session['qid'] = q.id
+	# The id of every correct guess
+	session['qids'] = [] 
+	# Fail counter
+	session['fails'] = 0
+
+	# Building the actual question
+	question = f"{q.song} - {q.year}"
+
+	return jsonify(
+		level=level,
+		points=points,
+		question=question,
+		alternatives=alternatives,
+		finished=False
+	)  
+
 
 @app.post('/quiz')
 def quiz_solve():
@@ -61,13 +66,12 @@ def quiz_solve():
 	points = session.get('points', 0)
 	qid = session.get('qid')
 	
-	# q = Quest.query.get_or_404(qid)
-	q = db.get_or_404(Hits, qid)
-
-	if request.json.get('value', '') == q.artist:
-		session['qids'].append(q.id)
-		points = session['points'] = (points + level) 
-		if points >= level*5:
+	# Validate given answer
+	q = Hits.query.get_or_404(qid)
+	if request.json.get('value', '') == q.artist: 
+		session['qids'].append(q.id) 
+		points = session['points'] = (points + 10) 
+		if points >= level*50:
 			level = session['level'] = level + 1
 			session['qids'] = []
 
@@ -75,42 +79,62 @@ def quiz_solve():
 		session['fails'] += 1 
 
 	# Generate the next question
-	while True:      
-		q = Hits.query.filter(Hits.peak == levels[level]['peak'], Hits.weeks > levels[level]['weeks'], Hits.year.in_(range(levels[level]['f_range'],levels[level]['t_range']))).order_by(func.random()).limit(1).first()
-		if q.id not in session['seen_songs']:
-			session['seen_songs'].append(q.id)
-			break
-		else:
-			# The song has already been seen, so continue the loop to try again
-			continue
+	# - What if level 5 is reached? (SOLVED)
+	#   -> KeyError in levels from quiz_settings.
+	level_key = min(level, max(*levels.keys()))
 
-	# Generate the 4 alternatives including the correct answer
-	alternatives = [q.artist]
+	qs = Hits.query\
+		.filter(
+			Hits.peak == levels[level_key]['peak'], 
+			Hits.weeks > levels[level_key]['weeks'], 
+			Hits.year.in_(range(levels[level_key]['f_range'],levels[level_key]['t_range'])), 
+			Hits.id.not_in(session['seen_songs'])
+		).order_by(func.random()).limit(1).first()
 
-	# Building the actual question
-	question = f"{q.year}: {q.song}"
+	# What if no question was found? (SOLVED)
+	# - No hit available within the level.
+	#	-> At least 8 questions are required per level.
+	#   -> Since level 4 is the last lookup, the problem can occur here.
+	# - All hits already seen.
 
-	# Getting 3 random artists from same level
-	while len(alternatives) < 4:
-		alt = Hits.query.filter(Hits.peak == levels[level]['peak'], Hits.weeks > levels[level]['weeks'], Hits.year.in_(range(levels[level]['f_range'],levels[level]['t_range']))).order_by(func.random()).limit(1).first()
-		if alt.artist in alternatives:
-			continue
-		if alt.id in session['seen_songs']:
-			continue
-		alternatives.append(alt.artist)
+	if qs: 
+		q = qs
+		session['seen_songs'].append(q.id)
+		session.modified = True
+
+		# Generate the 4 alternatives including the correct answer
+		alternatives = [q.artist]
+
+		# Getting 3 random artists from same level
+		while len(alternatives) < 4:
+			alt = Hits.query\
+				.filter(
+					Hits.peak == levels[level_key]['peak'], 
+					Hits.weeks > levels[level_key]['weeks'], 
+					Hits.year.in_(range(levels[level_key]['f_range'],levels[level_key]['t_range'])), 
+					Hits.artist.not_in(alternatives), 
+					# Hits.id.not_in(session['seen_songs']) # Why should this limitation exist?
+				).order_by(func.random()).limit(1).first()
+			alternatives.append(alt.artist)
+
+		# Shuffle the alternatives
+		random.shuffle(alternatives)
 	
-	# The id of the current question
-	session['qid'] = q.id
+		# The id of the current question
+		session['qid'] = q.id
 
-	# Shuffle the alternatives
-	random.shuffle(alternatives)
+		# Building the actual question
+		question = f"{q.song} - {q.year}"
 
 	# Check if game is over
+	# - When three failed attempts have been achieved.
+	# - When the same question is asked again.
 	done = session['fails'] >= 3 or q.id in session['qids']
 
-	return jsonify(level=level,
-				   points=points,
-				   question=question,
-				   alternatives=alternatives,
-				   finished=done
-				   )
+	return jsonify(
+		level=level,
+		points=points,
+		question=question if not done else None,
+		alternatives=alternatives if not done else [],
+		finished=done
+	)

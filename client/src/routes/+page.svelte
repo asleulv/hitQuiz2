@@ -15,7 +15,7 @@
 		}).then(x => x.json());
 	}
 
-	function onClick(e) {
+	function onClick() {
 		promise = fetch('/quiz').then(x => x.json());
 	}
 
