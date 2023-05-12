@@ -1,5 +1,6 @@
 <script>
 	import { scale, fade } from 'svelte/transition';
+	import { Confetti } from 'svelte-confetti';
 
 	let score = 0;
 	let level = 1;
@@ -41,8 +42,8 @@
 			{#if data.finished}
 				{#key data.finished}
 					<div in:fade={{ duration: 800 }} class="quest-info">
-						<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
-						<h1>You finished the exercise with {score} points.</h1>
+						<h1>{#if score > 0}Congratulations!<Confetti />{:else}Sorry!{/if}</h1>
+						<h1>You finished the quiz with {score} points.</h1>
 						<button on:click={onClick}>Try Again</button>
 					</div>
 				{/key}

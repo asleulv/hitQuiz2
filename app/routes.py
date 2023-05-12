@@ -5,16 +5,6 @@ import random
 from sqlalchemy.sql.expression import func, select
 from app.quiz_settings import levels
 
-# Path for our main Svelte page
-@app.route("/")
-def base():
-    return send_from_directory('../client/public', 'index.html')
-
-# Path for all the static files (compiled JS/CSS, etc.)
-@app.route("/<path:path>")
-def home(path):
-    return send_from_directory('../client/public', path)
-
 @app.route('/quiz')
 def quiz():
 	session.modified = True
@@ -76,8 +66,8 @@ def quiz_solve():
 
 	if request.json.get('value', '') == q.artist:
 		session['qids'].append(q.id)
-		points = session['points'] = (points + 10) 
-		if points >= level*50:
+		points = session['points'] = (points + level) 
+		if points >= level*5:
 			level = session['level'] = level + 1
 			session['qids'] = []
 
@@ -98,7 +88,7 @@ def quiz_solve():
 	alternatives = [q.artist]
 
 	# Building the actual question
-	question = f"{q.song} - {q.year}"
+	question = f"{q.year}: {q.song}"
 
 	# Getting 3 random artists from same level
 	while len(alternatives) < 4:
