@@ -118,8 +118,6 @@ def quiz_solve():
 	# Check if game is over
 	done = session['fails'] >= 3 or q.id in session['qids']
 
-	print(level,points,question, alternatives)
-
 	return jsonify(level=level,
 				   points=points,
 				   question=question,
