@@ -1,8 +1,8 @@
 <script>
 	import { scale, fade } from 'svelte/transition';
-	import LevelScreen from '$lib/components/LevelScreen.svelte';
-	import Timer from '$lib/components/Timer.svelte';
 	import { Confetti } from 'svelte-confetti';
+	import InfoScreen from '$lib/components/InfoScreen.svelte';
+	import Timer from '$lib/components/Timer.svelte';
 
 	let state = 1;
 	let score = 0;
@@ -10,7 +10,7 @@
 	let timer = null;
 
 	let promise = fetch('/quiz').then(x => x.json());
-
+	
 	function startTimer() {
 		timer.reset();
 		timer.start();
@@ -55,6 +55,7 @@
 		}
 		if (data.finished) {
 			state = 2;
+			timer.reset()
 		} else if (!data.finished && state == 0) {
 			startTimer();
 		}
@@ -79,25 +80,29 @@
 			</div>
 		{:then data}
 			{#if state == 2}
-				{#key data.finished}
-					<div in:fade={{ duration: 800 }} class="quest-info">
-						<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
-						<p>You finished the quiz with {score} points.</p>
-						<button on:click={onClick} style="z-index: 1;">Try Again</button>
-						{#if score > 0}
-							<div style="position: fixed; top: -50px; left: 0; height: 16rem; width: 100vw; display: flex; justify-content: center; overflow: hidden;">
-								<Confetti x={[-5, 5]} y={[0, 0.1]} delay={[500, 2000]}  infinite duration=5000 amount=200 fallDistance="16rem" />
-							</div>
-						{/if}
-					</div>
-				{/key}
+				<InfoScreen success={score > 1}>
+					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
+					<p>You finished the quiz with {score} points.</p>
+					<button on:click={onClick}>Try Again</button>
+				</InfoScreen>
 			{:else if state == 1}
-				<LevelScreen on:hide={onHide} visible={state == 1} {level} />
+				<InfoScreen success={level > 1}>
+					{#if level > 1}
+						<h1>Level Up</h1>
+						<p>Congratulations you have reached level {level}.</p>
+						<button on:click={onHide}>Continue</button>
+					{:else}
+						<h1>Let's go.</h1>
+						<p>In each level you will be presented with a few tracks and a selection of artists. Choose the artist or band that had a hit with the track shown. Hurry up, time is valuable.</p>
+						<p>Get ready for level {level}.</p>
+						<button on:click={onHide} class="btn">I am ready</button>
+					{/if}
+				</InfoScreen>
 			{:else}
 				<div>
 					<div class="question-wrapper">
 						{#key data.question_info}
-							<h2 class="question_info" in:fade={{ duration: 800 }}>{data.question_info}</h2>
+							<h2 class="question-info" in:fade={{ duration: 800 }}>{data.question_info}</h2>
 						{/key}
 						{#key data.question}
 							<h1 class="question" in:fade={{ duration: 800 }}>{data.question}</h1>
@@ -158,15 +163,6 @@
 		row-gap: 15px;
 	}
 
-	.quest-info {
-		margin: 5.6rem 0;
-	}
-
-	.quest-info p {
-		margin: 1.2rem 0 2.4rem ;
-	}
-
-	.quest-info button, 
 	.quest-form button {
 		padding: 0.5rem 1.5rem;
 		border: 1px solid #ddd;
@@ -178,12 +174,10 @@
 		transition-timing-function: ease-out;
 	}
 
-	.quest-info button:hover, 
 	.quest-form button:hover {
 		background-color: #dedede;
 	}
 
-	.quest-info button:active, 
 	.quest-form button:active {
 		background: linear-gradient(-45deg, #aaa, #ccc, #aaa, #fff);
 		background-size: 400% 400%; 
@@ -219,7 +213,7 @@
 		justify-content: center;
 	}
 
-	.question_info {
+	.question-info {
 		margin: 0.64rem;
 		display: flex;
 		font-weight: lighter;
