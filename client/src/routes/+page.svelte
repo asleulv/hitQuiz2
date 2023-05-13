@@ -1,13 +1,24 @@
 <script>
 	import { scale, fade } from 'svelte/transition';
+	import LevelScreen from '$lib/components/LevelScreen.svelte';
+	import Timer from '$lib/components/Timer.svelte';
 	import { Confetti } from 'svelte-confetti';
 
+	let state = 1;
 	let score = 0;
 	let level = 1;
+	let timer = null;
+
 	let promise = fetch('/quiz').then(x => x.json());
+
+	function startTimer() {
+		timer.reset();
+		timer.start();
+	}
 
 	function onSubmit(e) {
 		const {submitter} = e;
+		timer.stop();
 		promise = fetch('/quiz', {
 			method: 'post', 
 			headers: { 'Content-Type': 'application/json' }, 
@@ -16,16 +27,44 @@
 	}
 
 	function onClick() {
+		state = 1;
+		timer.reset();
 		promise = fetch('/quiz').then(x => x.json());
 	}
 
-	$: promise.then(data => { if (score != data.points) score = data.points; });
-	$: promise.then(data => { if (level != data.level) level = data.level; });
+	function onHide() {
+		state = 0;
+		startTimer();
+	}
+
+	function onStop() {
+		promise = fetch('/quiz', {
+			method: 'post', 
+			headers: { 'Content-Type': 'application/json' }, 
+			body: JSON.stringify({ value: '' })
+		}).then(x => x.json());
+	}
+
+	$: promise.then(data => { 
+		if (score != data.points) score = data.points;
+		if (level != data.level) {
+			level = data.level; 
+			timer.stop();
+			timer.reset()
+			state = 1;
+		}
+		if (data.finished) {
+			state = 2;
+		} else if (!data.finished && state == 0) {
+			startTimer();
+		}
+	});
 </script>
 
 <div class="app">
 	<div class="wrapper">
 		<div class="hud">
+			<div>Sec: <Timer bind:this={timer} on:stop={onStop} /></div>
 			{#key level}
 				<div>Level: <span in:scale={{ delay: 100, duration: 800 }}>{level}</span></div>
 			{/key}
@@ -39,22 +78,31 @@
 				<div class="lds-dual-ring"></div>
 			</div>
 		{:then data}
-			{#if data.finished}
+			{#if state == 2}
 				{#key data.finished}
 					<div in:fade={{ duration: 800 }} class="quest-info">
-						<h1>{#if score > 0}Congratulations!<Confetti />{:else}Sorry!{/if}</h1>
-						<h1>You finished the quiz with {score} points.</h1>
-						<button on:click={onClick}>Try Again</button>
+						<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
+						<p>You finished the quiz with {score} points.</p>
+						<button on:click={onClick} style="z-index: 1;">Try Again</button>
+						{#if score > 0}
+							<div style="position: fixed; top: -50px; left: 0; height: 16rem; width: 100vw; display: flex; justify-content: center; overflow: hidden;">
+								<Confetti x={[-5, 5]} y={[0, 0.1]} delay={[500, 2000]}  infinite duration=5000 amount=200 fallDistance="16rem" />
+							</div>
+						{/if}
 					</div>
 				{/key}
+			{:else if state == 1}
+				<LevelScreen on:hide={onHide} visible={state == 1} {level} />
 			{:else}
 				<div>
-					{#key data.question_info}
-						<h2 class="question_info" in:fade={{ duration: 800 }}>{data.question_info}</h2>
-					{/key}
-					{#key data.question}
-						<h1 class="question" in:fade={{ duration: 800 }}>{data.question}</h1>
-					{/key}
+					<div class="question-wrapper">
+						{#key data.question_info}
+							<h2 class="question_info" in:fade={{ duration: 800 }}>{data.question_info}</h2>
+						{/key}
+						{#key data.question}
+							<h1 class="question" in:fade={{ duration: 800 }}>{data.question}</h1>
+						{/key}
+					</div>
 					{#key data.answers}
 						<form class="quest-form" on:submit|preventDefault={onSubmit}>
 							{#each Object.values(data.alternatives) as answer, i}
@@ -114,6 +162,10 @@
 		margin: 5.6rem 0;
 	}
 
+	.quest-info p {
+		margin: 1.2rem 0 2.4rem ;
+	}
+
 	.quest-info button, 
 	.quest-form button {
 		padding: 0.5rem 1.5rem;
@@ -154,15 +206,21 @@
 		}
 	}
 
+	.question-wrapper {
+		min-height: 12.5rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
 	.question {
-		min-height: 1rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
 	.question_info {
-		min-height: 1rem;
+		margin: 0.64rem;
 		display: flex;
 		font-weight: lighter;
 		align-items: center;
