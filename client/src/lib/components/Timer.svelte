@@ -3,7 +3,7 @@
 
 	const dispatch = createEventDispatcher();
 
-	const duration = 5;
+	const duration = 10;
 
 	let interval = null; 
 	let now = new Date().getTime();
@@ -44,6 +44,6 @@
 <style>
 	span {
 		display: inline-block;
-		width: .6rem;
+		min-width: 1.2rem;
 	}
 </style>
