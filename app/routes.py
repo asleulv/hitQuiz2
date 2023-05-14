@@ -72,8 +72,8 @@ def quiz_solve():
 	q = Hits.query.get_or_404(qid)
 	if request.json.get('value', '') == q.artist: 
 		session['qids'].append(q.id) 
-		points = session['points'] = (points + 10) 
-		if points >= level*50:
+		points = session['points'] = (points + level*10)
+		if points >= sum(x*5*10 for x in range(level + 1)): 
 			level = session['level'] = level + 1
 			session['qids'] = []
 
