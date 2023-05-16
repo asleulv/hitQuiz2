@@ -1,0 +1,1 @@
+# HitQuiz2 backend
