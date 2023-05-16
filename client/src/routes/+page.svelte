@@ -2,6 +2,7 @@
 	import { scale, fade } from 'svelte/transition';
 	import { Confetti } from 'svelte-confetti';
 	import InfoScreen from '$lib/components/InfoScreen.svelte';
+	import ScoreForm from '$lib/components/ScoreForm.svelte';
 	import Timer from '$lib/components/Timer.svelte';
 
 	let state = 1;
@@ -9,41 +10,41 @@
 	let level = 1;
 	let timer = null;
 
-	let promise = fetch('/quiz').then(x => x.json());
-	
-	function startTimer() {
+	let promise = fetch('/questions/').then(x => x.json());
+
+	const startTimer = () => {
 		timer.reset();
 		timer.start();
 	}
-
-	function onSubmit(e) {
+	
+	const onSubmit = (e) => {
 		const {submitter} = e;
 		timer.stop();
-		promise = fetch('/quiz', {
+		promise = fetch('/questions/', {
 			method: 'post', 
 			headers: { 'Content-Type': 'application/json' }, 
 			body: JSON.stringify({ value: submitter.value })
 		}).then(x => x.json());
-	}
+	};
 
-	function onClick() {
+	const onClick = () => {
 		state = 1;
 		timer.reset();
-		promise = fetch('/quiz').then(x => x.json());
-	}
+		promise = fetch('/questions/').then(x => x.json());
+	};
 
-	function onHide() {
+	const onHide = () => {
 		state = 0;
 		startTimer();
-	}
+	};
 
-	function onStop() {
-		promise = fetch('/quiz', {
+	const onStop = () => {
+		promise = fetch('/questions/', {
 			method: 'post', 
 			headers: { 'Content-Type': 'application/json' }, 
 			body: JSON.stringify({ value: '' })
 		}).then(x => x.json());
-	}
+	};
 
 	$: promise.then(data => { 
 		if (score != data.points) score = data.points;
@@ -83,6 +84,7 @@
 				<InfoScreen success={score > 1}>
 					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
 					<p>You finished the quiz with {score} points.</p>
+					<ScoreForm success={score > 0} />
 					<button on:click={onClick}>Try Again</button>
 				</InfoScreen>
 			{:else if state == 1}
