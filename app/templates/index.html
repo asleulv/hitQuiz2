@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-
-<h3>Who had the {{ question.year }} hit "{{ question.song }}"?</h3>
-{% for artist in alternatives %}
-    <p>{{ artist }}</p>
-{% endfor %}
-
-{% endblock %}
