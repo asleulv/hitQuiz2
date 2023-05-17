@@ -87,7 +87,7 @@
 
 	$: level, (() => {
 		let [h,s,v] = rgb2hsv(...hexToRgb($background)); 
-		background.set(rgbToHex(...hsv2rgb((h + 60) % 360, s, v)));
+		background.set(rgbToHex(...hsv2rgb((h + 30) % 360, s, v)));
 	})();
 
 </script>
