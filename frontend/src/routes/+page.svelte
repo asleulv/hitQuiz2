@@ -86,7 +86,7 @@
 	};
 
 	$: level, (() => {
-		let changeFactor = Array.from({length: 11}, (x, i) => (i + 1)*30)[Math.floor(Math.random() * 11)];
+		let changeFactor = 30 * (1 + Math.floor(Math.random() * 10));
 		let [h,s,v] = rgb2hsv(...hexToRgb($background)); 
 		background.set(rgbToHex(...hsv2rgb((h + changeFactor) % 360, s, v)));
 	})();
