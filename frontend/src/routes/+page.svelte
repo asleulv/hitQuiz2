@@ -4,6 +4,8 @@
 	import InfoScreen from '$lib/components/InfoScreen.svelte';
 	import ScoreForm from '$lib/components/ScoreForm.svelte';
 	import Timer from '$lib/components/Timer.svelte';
+	import { background } from '$lib/stores.js';
+
 
 	let state = 1;
 	let score = 0;
@@ -83,13 +85,15 @@
 		return [f(5),f(3),f(1)];
 	};
 
-	$: color = (() => {
-		let [h,s,v] = rgb2hsv(...hexToRgb('#144bb8')); 
-		return rgbToHex(...hsv2rgb((h + (level - 1) * 60) % 360, s, v));
+	$: level, (() => {
+		let changeFactor = 30 * (1 + Math.floor(Math.random() * 10));
+		let [h,s,v] = rgb2hsv(...hexToRgb($background)); 
+		background.set(rgbToHex(...hsv2rgb((h + changeFactor) % 360, s, v)));
 	})();
+
 </script>
 
-<div class="app" style:background-color={color}>
+<div class="app" style:background-color={$background}>
 	<div class="wrapper">
 		<div class="hud">
 			<div>Sec: <Timer bind:this={timer} on:stop={onStop} /></div>
