@@ -90,7 +90,6 @@
 		let [h,s,v] = rgb2hsv(...hexToRgb($background)); 
 		background.set(rgbToHex(...hsv2rgb((h + changeFactor) % 360, s, v)));
 	})();
-
 </script>
 
 <div class="app" style:background-color={$background}>
@@ -115,7 +114,7 @@
 				<InfoScreen success={score > 1}>
 					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
 					<p>You finished the quiz with {score} points.</p>
-					<ScoreForm success={score > 50} />
+					<ScoreForm success={score >= 50} />
 					<button on:click={onClick}>Try Again</button>
 				</InfoScreen>
 			{:else if state == 1}
