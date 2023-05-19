@@ -41,11 +41,8 @@
 	};
 
 	let offset = tweened(1, { duration, easing });
-	let rotation = tweened(360, { duration, easing });
 
 	$: offset.set(Math.max(ticks , 0) / duration);
-	$: rotation.set((Math.max(ticks , 0) / duration) * 360);
-
 </script>
 
 <svg viewBox="-16 -16 32 32" width="92" height="92">
