@@ -96,7 +96,7 @@
 	<div class="wrapper">
 		<div class="hud">
 			<div class="brand">hitQuiz</div>
-			<div>Sec: <Timer bind:this={timer} on:stop={onStop} /></div>
+			<Timer bind:this={timer} on:stop={onStop} />
 			{#key level}
 				<div>Level: <span in:scale={{ delay: 100, duration: 800 }}>{level}</span></div>
 			{/key}
@@ -192,10 +192,9 @@
 	}
 
 	.brand {
-		align-self: flex-start;
-		margin-right: auto;
 		font-weight: 750;
 		font-size: 1.8em;
+		margin-right: auto;
 	}
 
 	.quest-form {
@@ -245,6 +244,7 @@
 
 	.question-wrapper {
 		min-height: 12.5rem;
+		margin: 1.8rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -305,6 +305,10 @@
 	@media only screen and (max-width: 480px) { /* 576*/
 		.quest-form {
 			grid-template-columns: repeat(1, 1fr);
+		}
+
+		.hud div {
+			max-width: 36px;
 		}
 	}
 
