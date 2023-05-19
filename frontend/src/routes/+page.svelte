@@ -96,6 +96,7 @@
 <div class="app" style:background-color={$background}>
 	<div class="wrapper">
 		<div class="hud">
+			<div class="brand">hitQuiz</div>
 			<div>Sec: <Timer bind:this={timer} on:stop={onStop} /></div>
 			{#key level}
 				<div>Level: <span in:scale={{ delay: 100, duration: 800 }}>{level}</span></div>
@@ -114,7 +115,7 @@
 				<InfoScreen success={score > 1}>
 					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
 					<p>You finished the quiz with {score} points.</p>
-					<ScoreForm success={score > 0} />
+					<ScoreForm success={score > 50} />
 					<button on:click={onClick}>Try Again</button>
 				</InfoScreen>
 			{:else if state == 1}
@@ -170,6 +171,7 @@
 	.app {
 		text-align: center;
 		background-color: #282c34;
+		background: linear-gradient(180deg, rgba(40,44,52,1) 0%, rgba(0,0,0,0.284) 25%, rgba(0,0,0,0) 55%);
 		color: white;
 		font-size: calc(8px + 1.5vmin);
 		min-height: 100vh;
@@ -186,7 +188,15 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-end;
+		align-items: center;
 		gap: .6rem;
+	}
+
+	.brand {
+		align-self: flex-start;
+		margin-right: auto;
+		font-weight: 750;
+		font-size: 1.8em;
 	}
 
 	.quest-form {
