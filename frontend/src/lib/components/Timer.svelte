@@ -76,8 +76,4 @@
 		left: 50%;
 		transform: translateX(-50%);
 	}
-	span {
-		display: inline-block;
-		min-width: 1.2rem;
-	}
 </style>
