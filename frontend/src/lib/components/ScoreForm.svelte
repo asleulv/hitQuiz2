@@ -2,12 +2,12 @@
 	
 	export let success = false;
 
-	let promise = fetch('/scores/').then(x => x.json());
+	let promise = fetch('/scores/test').then(x => x.json());
 	let scores = [];
 	let name = '';
 
 	const onSubmit = (e) => {
-		promise = fetch('/scores/', {
+		promise = fetch('/scores/test', {
 			method: 'POST', 
 			headers: { 'Content-Type': 'application/json' }, 
 			body: JSON.stringify({ name: name })
@@ -42,7 +42,7 @@
 			<table>
 				{#each users as user, i}
 					<tr>
-						<td>{i+1}</td>
+						<td>{user.rank}</td>
 						<td>{user.name}</td>
 						<td>{user.points}</td>
 					</tr>
