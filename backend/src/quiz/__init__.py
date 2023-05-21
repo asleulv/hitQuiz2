@@ -11,7 +11,6 @@ migrate = Migrate()
 def create_app():
 	app = Flask(__name__, 
 	    static_url_path = '',
-
 	)
 	app.config.from_object('quiz.config.Config')
 	db.init_app(app)

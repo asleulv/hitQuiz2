@@ -15,5 +15,3 @@ import { writable } from 'svelte/store';
  * #149fb8
  */
 export const background = writable('#149fb8'); 
-
-
