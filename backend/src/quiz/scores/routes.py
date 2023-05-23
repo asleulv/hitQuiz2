@@ -41,13 +41,13 @@ def index():
 
 @blueprint.post('/')
 def create():
-	name = request.json.get('name', '')
+	name = request.json.get('name', '').strip()
 	points = session.get('points', 0)
 
 	score = None
 	if points >= 50 \
-		and 3 <= len(name.strip()) <= 8 \
-		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name.strip()):
+		and 3 <= len(name) <= 8 \
+		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name):
 		
 		score = Score(name=name, points=points)
 		db.session.add(score)
@@ -71,7 +71,6 @@ def create():
 		meta['current_id'] = score.id
 
 	scores_schema = RankSchema(many=True)
-	# return scores_schema.jsonify(ranks)
 	return jsonify(
 		data=scores_schema.dump(ranks), 
 		meta=meta
