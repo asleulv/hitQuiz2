@@ -2,7 +2,9 @@
 	import { scale, fade } from 'svelte/transition';
 	import { Confetti } from 'svelte-confetti';
 	import InfoScreen from '$lib/components/InfoScreen.svelte';
+	import Modal from '$lib/components/Modal.svelte';
 	import ScoreForm from '$lib/components/ScoreForm.svelte';
+	import ScoreList from '$lib/components/ScoreList.svelte';
 	import Timer from '$lib/components/Timer.svelte';
 	import { background } from '$lib/stores.js';
 	import { hexToRgb, hsvToRgb, rgbToHex, rgbToHsv } from '$lib/utils.js';
@@ -70,19 +72,46 @@
 		let [h,s,v] = rgbToHsv(...hexToRgb($background)); 
 		background.set(rgbToHex(...hsvToRgb((h + changeFactor) % 360, s, v)));
 	})();
+
+
+	let modal = null;
+	const showModal = () => {
+		if (state > 0) modal.showModal();
+	};
+
+
+	let scoreList = null;
+	const onKeyDown = async (e) => {
+		e.stopPropagation();
+		if ((e.key === 'h' || e.key === 'l') && state > 0) { 
+			modal.toggleModal();
+		}
+	};
+
+	const resetScoreList = async () => {
+		await scoreList.reset();
+	};
 </script>
+
+<svelte:window on:keydown={onKeyDown} />
 
 <div class="app" style:background-color={$background}>
 	<div class="wrapper">
 		<div class="hud">
 			<div class="brand">hitQuiz</div>
 			<Timer bind:this={timer} on:stop={onStop} />
-			{#key level}
-				<div>Level: <span in:scale={{ delay: 100, duration: 800 }}>{level}</span></div>
-			{/key}
-			{#key score}
-				<div>Score: <span in:fade={{ delay: 100, duration: 800 }}>{score}</span></div>
-			{/key}
+			<div class="score-wrapper">
+				{#key level}
+					<div>Level: <span in:scale={{ delay: 100, duration: 800 }}>{level}</span></div>
+				{/key}
+				{#key score}
+					<div>Score: <span in:fade={{ delay: 100, duration: 800 }}>{score}</span></div>
+				{/key}
+				{#key state}
+				<button class="i-btn" on:click={showModal} disabled={state == 0} title="Leaderboard"
+					transition:scale>i</button>
+				{/key}
+			</div>
 		</div>
 
 		{#await promise}
@@ -94,7 +123,7 @@
 				<InfoScreen success={score > 1}>
 					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
 					<p>You finished the quiz with {score} points.</p>
-					<ScoreForm success={score >= 50} />
+					<ScoreForm success={score >= 50} on:updated={resetScoreList} />
 					<button on:click={onClick}>Try Again</button>
 				</InfoScreen>
 			{:else if state == 1}
@@ -133,6 +162,10 @@
 			<p>{error.message}</p>
 		{/await}
 	</div>
+	<Modal bind:this={modal}> 
+		<h2 slot="title">Leaderboard</h2>
+		<ScoreList bind:this={scoreList} />
+	</Modal>
 </div>
 
 <style>
@@ -169,12 +202,47 @@
 		justify-content: flex-end;
 		align-items: center;
 		gap: .6rem;
+		z-index: 1;
 	}
 
 	.brand {
 		font-weight: 750;
 		font-size: 1.8em;
 		margin-right: auto;
+	}
+
+	.score-wrapper {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		padding: 0.64rem;
+		gap: .6rem;
+		background-color: rgba(255,255,255,0.1);
+		border-radius: 24px;
+	}
+
+	.i-btn {
+		height: 20px;
+		width: 20px;
+		padding: 0;
+		border: 1px solid white;
+		border-radius: 50%;
+		background-color: rgba(255,255,255,0.1);
+		color: white;
+		cursor: pointer;
+		z-index: 1;
+		transition: background-color 0.5s ease, font-weight 0.5s ease;
+	}
+
+	.i-btn:hover {
+		background-color: rgba(255,255,255,0.2);
+		font-weight: 600;
+	}
+
+	.i-btn[disabled] {
+		display: none;
 	}
 
 	.quest-form {
@@ -287,9 +355,20 @@
 			grid-template-columns: repeat(1, 1fr);
 		}
 
-		.hud div {
-			max-width: 36px;
+		.question-wrapper {
+			min-height: 8.5rem;
+		}
+
+		.hud {
+			min-height: 60px;
+		}
+
+		.hud .score-wrapper {
+			max-width: 72px;
+			padding: 0.2rem;
+			background-color: inherit;
+			gap: .3rem;
+			padding: 0;
 		}
 	}
-
 </style>
