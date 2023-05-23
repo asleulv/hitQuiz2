@@ -44,6 +44,7 @@ def create():
 	name = request.json.get('name', '')
 	points = session.get('points', 0)
 
+	score = None
 	if points >= 50 \
 		and 3 <= len(name.strip()) <= 8 \
 		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name.strip()):
