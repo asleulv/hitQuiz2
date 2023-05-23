@@ -56,7 +56,7 @@
 	}
 
 	export const reset = async () => {
-		const response = await fetch('/scores/test');
+		const response = await fetch('/scores/');
 		const data = await response.json();
 		store.set(data);
 	};

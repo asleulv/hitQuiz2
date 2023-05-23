@@ -22,7 +22,6 @@
 	};
 
 	const isCurrentItem = (data, id) => {
-		console.log(data, id);
 		return data.meta 
 			&& data.meta.current_id 
 			&& data.meta.current_id === id

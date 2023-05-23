@@ -93,6 +93,10 @@
 	};
 </script>
 
+<svelte:head>
+  <title>hitQuiz</title>
+</svelte:head>
+
 <svelte:window on:keydown={onKeyDown} />
 
 <div class="app" style:background-color={$background}>
