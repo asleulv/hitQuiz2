@@ -24,7 +24,7 @@
 
 <style>
 	.confetti-overlay {
-		position: fixed; 
+		position: absolute;
 		top: -100px; 
 		left: 0; 
 		height: 16rem; 
@@ -35,11 +35,11 @@
 	}
 
 	div {
-		margin: 5.6rem 0;
+		margin: 5.6rem 0 0;
 	}
 
 	div :global(p) {
-		margin: 1.2rem 0 2.4rem ;
+		margin: 1.2rem 0 1.6rem ;
 	}
 
 	div :global(button) {
