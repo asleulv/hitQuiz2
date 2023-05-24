@@ -92,13 +92,13 @@ def update():
 		points = session['points'] = (points + level*POINTS_PER_QUESTION)
 		if points >= sum(QUESTIONS_PER_LEVEL*x*POINTS_PER_QUESTION for x in range(1, level + 1)): 
 			level = session['level'] = level + 1
-			session['qids'] = []
+			# session['qids'] = []
 
 	else:
 		session['fails'] += 1 
 
 	# Generate the next question
-	# - What if level 11 is reached? (SOLVED)
+	# - What if level 21 is reached? (SOLVED)
 	#   -> KeyError in LEVELS from quiz_settings.
 	level_key = min(level, max(*LEVELS.keys()))
 
@@ -112,8 +112,8 @@ def update():
 
 	# What if no question was found? (SOLVED)
 	# - No hit available within the level.
-	#	-> At least 8 questions are required per level.
-	#   -> Since level 10 is the last lookup, the problem can occur here.
+	#	-> At least 7 questions are required per level.
+	#   -> Since level 20 is the last lookup, the problem can occur here.
 	# - All Hit already seen.
 
 	if qs: 

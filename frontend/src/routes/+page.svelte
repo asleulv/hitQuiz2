@@ -5,9 +5,24 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import ScoreForm from '$lib/components/ScoreForm.svelte';
 	import ScoreList from '$lib/components/ScoreList.svelte';
+	import Stats from '$lib/components/Stats.svelte';
+	import Tabs from '$lib/components/Tabs.svelte';
 	import Timer from '$lib/components/Timer.svelte';
 	import { background } from '$lib/stores.js';
 	import { hexToRgb, hsvToRgb, rgbToHex, rgbToHsv } from '$lib/utils.js';
+
+	const tabs = [
+		{ 
+			label: 'Stats',
+			value: 1,
+			component: Stats
+		},
+		{ 
+			label: 'Leaderboard',
+			value: 2,
+			component: ScoreList
+		},
+  ];
 
 	let state = 1;
 	let score = 0;
@@ -77,12 +92,6 @@
 	const showModal = () => {
 		if (state > 0) modal.show();
 	};
-
-
-	let scoreList = null;
-	const resetScoreList = async () => {
-		// await scoreList.reset();
-	};
 </script>
 
 <svelte:head>
@@ -117,7 +126,7 @@
 				<InfoScreen success={score > 1}>
 					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
 					<p>You finished the quiz with {score} points.</p>
-					<ScoreForm success={score >= 50} on:updated={resetScoreList} />
+					<ScoreForm success={score >= 50} />
 					<button on:click={handleClick}>Try Again</button>
 				</InfoScreen>
 			{:else if state == 1}
@@ -157,8 +166,7 @@
 		{/await}
 	</div>
 	<Modal bind:this={modal}> 
-		<h2 slot="title">Leaderboard</h2>
-		<ScoreList bind:this={scoreList} />
+		<Tabs {tabs} />
 	</Modal>
 </div>
 

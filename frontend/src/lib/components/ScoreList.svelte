@@ -53,15 +53,9 @@
 			observer.observe(node);
 		}
 	}
-
-	// export const reset = async () => {
-	// 	const response = await fetch('/scores/');
-	// 	const data = await response.json();
-	// 	store.set(data);
-	// };
 </script>
 
-<div>
+<div class="scroller">
 	<table>
 	 	{#each $store.data || [] as item}
 		<tr>
@@ -77,6 +71,14 @@
 </div>
 
 <style>
+	.scroller {
+		box-sizing: border-box;
+		position: relative;
+		height: auto;
+		display: block;
+		overflow: auto;
+		margin: 1.5rem 0;
+	}
 	table {
 		width: 100%;
 		border-collapse: collapse;
