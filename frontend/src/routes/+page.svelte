@@ -136,10 +136,11 @@
 						<p>Congratulations you have reached level {level}.</p>
 						<button on:click={handleHide}>Continue</button>
 					{:else}
-						<h1>Let's go.</h1>
-						<p>In each level you will be presented with a few tracks and a selection of artists. Choose the artist or band that had a hit with the track shown. Hurry up, time is valuable.</p>
+						<h1>Who had the hit?</h1>
+						<p>Given the song title, year and peak position the question remains exactly that...</p>
+						<p>If you score 100 points or more you'll get your name on the leaderboard. What an honor!</p>
 						<p>Get ready for level {level}.</p>
-						<button on:click={handleHide} class="btn">I am ready</button>
+						<button on:click={handleHide} class="btn">Let's go!</button>
 					{/if}
 				</InfoScreen>
 			{:else}
