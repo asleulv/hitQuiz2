@@ -36,8 +36,8 @@
 					type="text" 
 					bind:value={name} 
 					placeholder="user123" 
-					minlength="3" 
-					maxlength="8" 
+					minlength="2" 
+					maxlength="20" 
 					pattern="[A-Za-z]+[A-Za-z\-\_]*[0-9]*"
 				/>
 				<button type="submit">Send</button>
@@ -77,6 +77,7 @@
 /*		height: 128px;*/
 		height: 212px;
 		margin: 0.64rem 0;
+		font-size: .84rem;
 	}
 
 	input {

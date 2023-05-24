@@ -46,7 +46,7 @@ def create():
 
 	score = None
 	if points >= 50 \
-		and 3 <= len(name) <= 8 \
+		and 2 <= len(name) <= 20 \
 		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name):
 		
 		score = Score(name=name, points=points)
