@@ -89,8 +89,6 @@
   <title>hitQuiz</title>
 </svelte:head>
 
-<svelte:window on:keydown={onKeyDown} />
-
 <div class="app" style:background-color={$background}>
 	<div class="wrapper">
 		<div class="hud">
