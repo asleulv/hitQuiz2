@@ -1,12 +1,14 @@
 from .. import db
 from .models import Score
-# from .schemas import ScoreSchema
+from .schemas import RankSchema
 from flask import (
 	Blueprint, 
 	jsonify, 
 	request, 
-	session
+	session, 
+	url_for
 )
+from sqlalchemy import func
 import re
 
 
@@ -16,63 +18,36 @@ blueprint = Blueprint(
 	url_prefix='/scores'
 )
 
-# @blueprint.route('/')
-# def index():
-# 	scores = Score.query.order_by(Score.points.desc()).limit(10).all()
-# 	scores_schema = ScoreSchema(many=True)
-# 	return scores_schema.jsonify(scores)
+@blueprint.route('/')
+def index():
+	page = request.args.get('page', 0, type=int)
 
-# @blueprint.post('/')
-# def create():
-# 	name = request.json.get('name', '')
-# 	points = session.get('points', 0)
-
-# 	# use webargs
-# 	if points >= 50 \
-# 		and 3 <= len(name.strip()) <= 8 \
-# 		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name.strip()):
-		
-# 		score = Score(name=name, points=points)
-# 		db.session.add(score)
-# 		db.session.commit()
-
-# 	scores = Score.query.order_by(Score.points.desc()).limit(10).all()
-# 	scores_schema = ScoreSchema(many=True)
-# 	return scores_schema.jsonify(scores)
-
-# ---
-# Devlopment version
-# 
-# Show new entry in leaderboard.
-# 
-# Problems:
-# - is new entry realy visible in table (Yes)
-# - how to format high ranking numbers in table
-
-
-from sqlalchemy import func
-from .schemas import RankSchema
-
-@blueprint.route('/test')
-def test_index():
-	rankings = Score.query.with_entities(
+	ranks = Score.query.with_entities(
 		Score.id, 
 		Score.name, 
 		Score.points, 
 		func.row_number().over(order_by=Score.points.desc()).label('rank'), 
-	).order_by(Score.points.desc()).limit(10).all()
+	).order_by(Score.points.desc()).limit(10).offset(page*10).all()
+	
+	meta = {}
+	if len(ranks) == 10: 
+		meta['next'] = url_for('.index', page=page+1)
 
 	scores_schema = RankSchema(many=True)
-	return scores_schema.jsonify(rankings)
+	return jsonify(
+		data=scores_schema.dump(ranks), 
+		meta=meta 
+	)
 
-@blueprint.post('/test')
-def test_create():
-	name = request.json.get('name', '')
+@blueprint.post('/')
+def create():
+	name = request.json.get('name', '').strip()
 	points = session.get('points', 0)
 
+	score = None
 	if points >= 50 \
-		and 3 <= len(name.strip()) <= 8 \
-		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name.strip()):
+		and 3 <= len(name) <= 8 \
+		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name):
 		
 		score = Score(name=name, points=points)
 		db.session.add(score)
@@ -91,5 +66,13 @@ def test_create():
 		func.row_number().over(order_by=Score.points.desc()).label('rank'), 
 	).order_by(Score.points.desc()).slice(start_rank - 1, end_rank).all()
 
+	meta = {}
+	if score:
+		meta['current_id'] = score.id
+
 	scores_schema = RankSchema(many=True)
-	return scores_schema.jsonify(ranks)
+	return jsonify(
+		data=scores_schema.dump(ranks), 
+		meta=meta
+	)
+

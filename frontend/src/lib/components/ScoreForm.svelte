@@ -1,20 +1,30 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
 	
 	export let success = false;
 
-	let promise = fetch('/scores/test').then(x => x.json());
+	let promise = fetch('/scores/').then(x => x.json());
 	let scores = [];
 	let name = '';
 
 	const onSubmit = (e) => {
-		promise = fetch('/scores/test', {
+		promise = fetch('/scores/', {
 			method: 'POST', 
 			headers: { 'Content-Type': 'application/json' }, 
 			body: JSON.stringify({ name: name })
 		}).then(x => x.json());
 		promise.then(data => {
 			success = false;
+			dispatch('updated');
 		});
+	};
+
+	const isCurrentItem = (data, id) => {
+		return data.meta 
+			&& data.meta.current_id 
+			&& data.meta.current_id === id
 	};
 
 </script>
@@ -38,10 +48,10 @@
 	<div class="highscores">
 		{#await promise}
 			<p>Loading scores.</p>
-		{:then users}
+		{:then data}
 			<table>
-				{#each users as user, i}
-					<tr>
+				{#each data.data as user, i}
+					<tr class:current={isCurrentItem(data, user.id)}>
 						<td>{user.rank}</td>
 						<td>{user.name}</td>
 						<td>{user.points}</td>
@@ -65,7 +75,8 @@
 	.highscores {
 		display: inline-block;
 		overflow: auto;
-		height: 128px;
+/*		height: 128px;*/
+		height: 212px;
 		margin: 0.64rem 0;
 	}
 
@@ -80,9 +91,15 @@
 	table {
 		width: 100%;
 		border-collapse: collapse;
+		font-size: 0.84em;
 	}
 	table, th, td {
  		border: 1px solid;
+	}
+
+	.current {
+		font-weight: 700;
+		background-color: rgba(255,255,255,0.2);
 	}
 
 	.input-group {
@@ -137,5 +154,11 @@
 
 	button[type="submit"] {
 		width: 100%;
+	}
+
+	@media only screen and (max-width: 480px) { /* 576*/
+		.highscores {
+			height: 151px;
+		}
 	}
 </style>
