@@ -80,13 +80,6 @@
 
 
 	let scoreList = null;
-	const onKeyDown = async (e) => {
-		e.stopPropagation();
-		if ((e.key === 'h' || e.key === 'l') && state > 0) { 
-			modal.toggle();
-		}
-	};
-
 	const resetScoreList = async () => {
 		// await scoreList.reset();
 	};
