@@ -61,8 +61,8 @@
 		dominant-baseline="baseline"
 		font-size="0.4em"
 	>
-		<text x="-3" y="2.25">
-			<tspan dx="3" font-weight="plain">{seconds}</tspan>
+		<text x="0" y="0.25em">
+			<tspan font-weight="plain">{seconds}</tspan>
 		</text>
 	</g>
 </svg>
