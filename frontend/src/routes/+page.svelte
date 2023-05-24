@@ -217,6 +217,7 @@
 		padding: 0.64rem;
 		gap: .6rem;
 		background-color: rgba(255,255,255,0.1);
+		border: 0;
 		border-radius: 24px;
 	}
 
