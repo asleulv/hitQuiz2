@@ -8,11 +8,10 @@
 	const duration = 10;
 
 	let interval = null; 
-	let now = new Date().getTime();
-	let end = now + duration * 1000;
+	let ticks = 0;
 
 	const updateTimer = () => {
-		now = new Date().getTime();
+		ticks += 1;
 	};
 	
 	export const start = () => {
@@ -25,24 +24,22 @@
 	};
 
 	export const reset = () => {
-		now = new Date().getTime();
-		end = now + duration * 1000;
+		ticks = 0;
 	};
 
 	onDestroy(() => {
 		clearInterval(interval);
 	});
 
-	$: ticks = Math.max(0, Math.round((end - now) / 1000));
-	$: seconds = Math.floor((ticks % (1000 * 60)));
-	$: if (ticks === 0) {
+	$: seconds = Math.max(0, duration - ticks);
+	$: if (seconds === 0) {
 		stop();
 		dispatch('stop');
 	};
 
 	let offset = tweened(1, { duration, easing });
 
-	$: offset.set(Math.max(ticks , 0) / duration);
+	$: offset.set(Math.max(seconds , 0) / duration);
 </script>
 
 <svg viewBox="-16 -16 32 32" width="92" height="92">

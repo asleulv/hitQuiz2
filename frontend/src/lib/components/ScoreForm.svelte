@@ -9,7 +9,7 @@
 	let scores = [];
 	let name = '';
 
-	const onSubmit = (e) => {
+	const handleSubmit = () => {
 		promise = fetch('/scores/', {
 			method: 'POST', 
 			headers: { 'Content-Type': 'application/json' }, 
@@ -26,12 +26,11 @@
 			&& data.meta.current_id 
 			&& data.meta.current_id === id
 	};
-
 </script>
 
 <div class="wrapper">
 	{#if success}
-		<form on:submit|preventDefault={onSubmit}>
+		<form on:submit|preventDefault={handleSubmit}>
 			<div class="input-group">
 				<input 
 					type="text" 

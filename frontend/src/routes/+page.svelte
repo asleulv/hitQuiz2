@@ -9,7 +9,6 @@
 	import { background } from '$lib/stores.js';
 	import { hexToRgb, hsvToRgb, rgbToHex, rgbToHsv } from '$lib/utils.js';
 
-
 	let state = 1;
 	let score = 0;
 	let level = 1;
@@ -22,7 +21,7 @@
 		timer.start();
 	}
 	
-	const onSubmit = (e) => {
+	const handleSubmit = (e) => {
 		const {submitter} = e;
 		timer.stop();
 		promise = fetch('/questions/', {
@@ -32,18 +31,18 @@
 		}).then(x => x.json());
 	};
 
-	const onClick = () => {
+	const handleClick = () => {
 		state = 1;
 		timer.reset();
 		promise = fetch('/questions/').then(x => x.json());
 	};
 
-	const onHide = () => {
+	const handleHide = () => {
 		state = 0;
 		startTimer();
 	};
 
-	const onStop = () => {
+	const handleStop = () => {
 		promise = fetch('/questions/', {
 			method: 'post', 
 			headers: { 'Content-Type': 'application/json' }, 
@@ -76,7 +75,7 @@
 
 	let modal = null;
 	const showModal = () => {
-		if (state > 0) modal.showModal();
+		if (state > 0) modal.show();
 	};
 
 
@@ -84,12 +83,12 @@
 	const onKeyDown = async (e) => {
 		e.stopPropagation();
 		if ((e.key === 'h' || e.key === 'l') && state > 0) { 
-			modal.toggleModal();
+			modal.toggle();
 		}
 	};
 
 	const resetScoreList = async () => {
-		await scoreList.reset();
+		// await scoreList.reset();
 	};
 </script>
 
@@ -103,7 +102,7 @@
 	<div class="wrapper">
 		<div class="hud">
 			<div class="brand">hitQuiz</div>
-			<Timer bind:this={timer} on:stop={onStop} />
+			<Timer bind:this={timer} on:stop={handleStop} />
 			<div class="score-wrapper">
 				{#key level}
 					<div>Level: <span in:scale={{ delay: 100, duration: 800 }}>{level}</span></div>
@@ -128,19 +127,19 @@
 					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
 					<p>You finished the quiz with {score} points.</p>
 					<ScoreForm success={score >= 50} on:updated={resetScoreList} />
-					<button on:click={onClick}>Try Again</button>
+					<button on:click={handleClick}>Try Again</button>
 				</InfoScreen>
 			{:else if state == 1}
 				<InfoScreen success={level > 1}>
 					{#if level > 1}
 						<h1>Level Up</h1>
 						<p>Congratulations you have reached level {level}.</p>
-						<button on:click={onHide}>Continue</button>
+						<button on:click={handleHide}>Continue</button>
 					{:else}
 						<h1>Let's go.</h1>
 						<p>In each level you will be presented with a few tracks and a selection of artists. Choose the artist or band that had a hit with the track shown. Hurry up, time is valuable.</p>
 						<p>Get ready for level {level}.</p>
-						<button on:click={onHide} class="btn">I am ready</button>
+						<button on:click={handleHide} class="btn">I am ready</button>
 					{/if}
 				</InfoScreen>
 			{:else}
@@ -154,7 +153,7 @@
 						{/key}
 					</div>
 					{#key data.answers}
-						<form class="quest-form" on:submit|preventDefault={onSubmit}>
+						<form class="quest-form" on:submit|preventDefault={handleSubmit}>
 							{#each Object.values(data.alternatives) as answer, i}
 								<button type="submit" value="{ answer }" in:scale={{ duration: 400, delay: i*100 }}>{answer}</button>
 							{/each}
@@ -184,6 +183,7 @@
 	:global(*) {
 		box-sizing: border-box;
 	}
+
 	.app {
 		text-align: center;
 		background-color: #282c34;
