@@ -5,15 +5,15 @@
 
 	const modalOpen = writable(false);
 
-	export const toggleModal = () => {
+	export const toggle = () => {
 		modalOpen.update(value => !value);
 	};
 
-	export const showModal = () => {
+	export const show = () => {
 		modalOpen.update(value => true);
 	};
 
-	export const hideModal = () => {
+	export const hide = () => {
 		modalOpen.update(value => false);
 	};
 
@@ -36,7 +36,7 @@
 	const onKeyDown = (e) => {
 		e.stopPropagation();
 		if (e.key === 'Escape') { 
-			hideModal();
+			hide();
 		}
 	}
 </script>
@@ -45,20 +45,20 @@
 
 {#key $modalOpen}
 	<div 
-		class="modal" 
+		class="overlay" 
 		class:open={$modalOpen}
 		in:fade={{ duration: 400 }}
 		out:fade={{ duration: 400, delay: 500 }}
 	>
 		<div 
-			class="modal-content" 
+			class="modal" 
 			style:background-color={$background} 
 			use:clickOutside 
-			on:outclick={hideModal} 
+			on:outclick={hide} 
 			in:fly={{ y: -200, duration: 1000, delay: 400 }}
 			out:fly={{ y: -200, duration: 1000, delay: 0 }}
 		>
-			<span class="close" on:click={toggleModal}>&times;</span>
+			<span class="close" on:click={toggle}>&times;</span>
 			<slot name="title" />
 			<div class="wrapper">
 				<slot />
@@ -68,8 +68,7 @@
 {/key}
 
 <style>
-	/* rename overlay */
-	.modal {
+	.overlay {
 		display: none;
 		position: fixed;
 		z-index: 1;
@@ -83,8 +82,7 @@
 		backdrop-filter: blur(3px);
 	}
 
-	.modal-content {
-/*		position: relative;*/
+	.modal {
 		display: flex;
 		flex-direction: column;
 
@@ -105,7 +103,6 @@
 
 		background-color: #fefefe;
 		background: linear-gradient(180deg, rgba(40,44,52,0.8) 0%, rgba(0,0,0,0.284) 25%, rgba(0,0,0,0) 55%);
-/*		transition: background-color 0.5s ease;*/
 
 		box-shadow: 0px 12px 12px 1px rgba(0, 0, 0, .2);
 	}

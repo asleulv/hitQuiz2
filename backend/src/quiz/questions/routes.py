@@ -11,7 +11,7 @@ from flask import (
 	request, 
 	session
 )
-from sqlalchemy.sql.expression import func
+from sqlalchemy import func
 import random
 
 

@@ -1,10 +1,9 @@
 <script>
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
-
-
+	
 	const LIMIT = 10; 
-	export const store = writable({}); 
+	const store = writable({}); 
 
 	onMount(async () => {
 		const response = await fetch('/scores/');
@@ -55,12 +54,11 @@
 		}
 	}
 
-	export const reset = async () => {
-		const response = await fetch('/scores/');
-		const data = await response.json();
-		store.set(data);
-	};
-
+	// export const reset = async () => {
+	// 	const response = await fetch('/scores/');
+	// 	const data = await response.json();
+	// 	store.set(data);
+	// };
 </script>
 
 <div>
