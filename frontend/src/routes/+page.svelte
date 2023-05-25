@@ -95,7 +95,7 @@
 </script>
 
 <svelte:head>
-  <title>hitQuiz</title>
+  <title>hitQuiz - Who had the hit?</title>
 </svelte:head>
 
 <div class="app" style:background-color={$background}>
