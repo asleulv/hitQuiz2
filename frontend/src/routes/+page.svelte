@@ -126,7 +126,7 @@
 				<InfoScreen success={score > 1}>
 					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
 					<p>You finished the quiz with {score} points.</p>
-					<ScoreForm success={score >= 50} />
+					<ScoreForm success={score >= 100} />
 					<button on:click={handleClick}>Try Again</button>
 				</InfoScreen>
 			{:else if state == 1}
@@ -137,7 +137,7 @@
 						<button on:click={handleHide}>Continue</button>
 					{:else}
 						<h1>Who had the hit?</h1>
-						<p>Given the song title, year and peak position the question remains exactly that...</p>
+						<p>Given the song title, year and peak position the question remains exactly that…</p>
 						<p>If you score 100 points or more you'll get your name on the leaderboard. What an honor!</p>
 						<p>Get ready for level {level}.</p>
 						<button on:click={handleHide} class="btn">Let's go!</button>

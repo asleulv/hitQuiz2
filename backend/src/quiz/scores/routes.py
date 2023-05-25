@@ -45,7 +45,7 @@ def create():
 	points = session.get('points', 0)
 
 	score = None
-	if points >= 50 \
+	if points >= 100 \
 		and 2 <= len(name) <= 20 \
 		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name):
 		
