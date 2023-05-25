@@ -5,9 +5,24 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import ScoreForm from '$lib/components/ScoreForm.svelte';
 	import ScoreList from '$lib/components/ScoreList.svelte';
+	import Stats from '$lib/components/Stats.svelte';
+	import Tabs from '$lib/components/Tabs.svelte';
 	import Timer from '$lib/components/Timer.svelte';
 	import { background } from '$lib/stores.js';
 	import { hexToRgb, hsvToRgb, rgbToHex, rgbToHsv } from '$lib/utils.js';
+
+	const tabs = [
+		{ 
+			label: 'Stats',
+			value: 1,
+			component: Stats
+		},
+		{ 
+			label: 'Leaderboard',
+			value: 2,
+			component: ScoreList
+		},
+  ];
 
 	let state = 1;
 	let score = 0;
@@ -77,16 +92,10 @@
 	const showModal = () => {
 		if (state > 0) modal.show();
 	};
-
-
-	let scoreList = null;
-	const resetScoreList = async () => {
-		// await scoreList.reset();
-	};
 </script>
 
 <svelte:head>
-  <title>hitQuiz</title>
+  <title>hitQuiz - Who had the hit?</title>
 </svelte:head>
 
 <div class="app" style:background-color={$background}>
@@ -117,7 +126,7 @@
 				<InfoScreen success={score > 1}>
 					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
 					<p>You finished the quiz with {score} points.</p>
-					<ScoreForm success={score >= 50} on:updated={resetScoreList} />
+					<ScoreForm success={score >= 100} />
 					<button on:click={handleClick}>Try Again</button>
 				</InfoScreen>
 			{:else if state == 1}
@@ -128,7 +137,7 @@
 						<button on:click={handleHide}>Continue</button>
 					{:else}
 						<h1>Who had the hit?</h1>
-						<p>Given the song title, year and peak position the question remains exactly that...</p>
+						<p>Given the song title, year and peak position the question remains exactly that…</p>
 						<p>If you score 100 points or more you'll get your name on the leaderboard. What an honor!</p>
 						<p>Get ready for level {level}.</p>
 						<button on:click={handleHide} class="btn">Let's go!</button>
@@ -158,8 +167,7 @@
 		{/await}
 	</div>
 	<Modal bind:this={modal}> 
-		<h2 slot="title">Leaderboard</h2>
-		<ScoreList bind:this={scoreList} />
+		<Tabs {tabs} />
 	</Modal>
 </div>
 

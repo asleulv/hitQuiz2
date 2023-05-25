@@ -45,7 +45,7 @@ def create():
 	points = session.get('points', 0)
 
 	score = None
-	if points >= 50 \
+	if points >= 100 \
 		and 2 <= len(name) <= 20 \
 		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name):
 		
@@ -75,4 +75,28 @@ def create():
 		data=scores_schema.dump(ranks), 
 		meta=meta
 	)
+
+# ---
+
+@blueprint.route('/stats')
+def stats():
+	seen_songs = session.get('seen_songs', [])
+	qids = session.get('qids', [])
+
+	d = []
+	l = []
+	i = 0
+	for song_id in seen_songs[:-1]:
+		if song_id in qids: # answered
+			i += 1
+			l += [1]
+		else: # failed
+			l += [2]
+		if i == 5:
+			d.append(l + [3 for _ in range(7 - len(l))])
+			l = []
+			i = 0
+	d.append(l + [3 for _ in range(7 - len(l))])
+	
+	return jsonify(d)
 

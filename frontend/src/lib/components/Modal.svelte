@@ -99,7 +99,6 @@
 		width: calc(100vw - 4.8rem);
 
 		padding: 0.6rem 1.2rem;
-		padding-bottom: 2.4rem;
 
 		background-color: #fefefe;
 		background: linear-gradient(180deg, rgba(40,44,52,0.8) 0%, rgba(0,0,0,0.284) 25%, rgba(0,0,0,0) 55%);
@@ -108,12 +107,9 @@
 	}
 
 	.wrapper {
-		box-sizing: border-box;
-		position: relative;
-		height: auto;
-		overflow: scroll;
-		display: block;
-		overflow: auto;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
 	}
 
 	.open {
@@ -123,8 +119,10 @@
 	.close {
 		position: absolute;
 		right: 1.2rem;
+		top: .4rem;
 		font-size: 1.6em;
 		cursor: pointer;
+		z-index: 1;
 	}
 
 	.close:hover {
