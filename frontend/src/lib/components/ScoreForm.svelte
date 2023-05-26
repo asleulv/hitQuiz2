@@ -104,8 +104,7 @@
 		margin: .25rem 0;
 		display: flex;
 		align-items: stretch;
-		flex-wrap: wrap;
-
+		flex-wrap: wrap;	
 		width: 100%;
 	}
 
@@ -127,6 +126,7 @@
 		border-bottom-right-radius: 3px;
 		border-top-right-radius: 3px;
 	}
+
 
 	.input-group > input {
 		flex: 1 0 auto;
@@ -150,8 +150,8 @@
 		background-color: #dedede;
 	}
 
-	button[type="submit"] {
-		width: 100%;
+	button[type="submit"] {	
+/*		width: 100%;*/
 	}
 
 	@media only screen and (max-width: 480px) { /* 576*/
