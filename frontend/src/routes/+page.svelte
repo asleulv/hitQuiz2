@@ -144,7 +144,7 @@
 		{:then data}
 			{#if state == 2}
 				<InfoScreen success={score > 1}>
-					<h1>{#if score > 99}🥳 Well done!{:else if (score === 0)}😖 Very poor!{:else}😐 Meh...{/if}</h1>
+					<p class="titletext">{#if score > 99}🥳 Well done!{:else if (score === 0)}😖 Very poor!{:else}😐 Meh...{/if}</p>
 					<p class="thintext">You finished the quiz with {score} points.</p>
 					<p class="thintext">{#if score < 100}100 points are required for a place on the leaderboard.{:else}You have earned a place on the leaderboard!{/if}</p>
 					{#if score > 0}<ScoreForm success={score >= 100} />{/if}
@@ -156,11 +156,11 @@
 			{:else if state == 1}
 				<InfoScreen success={level > 1}>
 					{#if level > 1}
-						<h1>Level Up</h1>
+						<p class="titletext">Level Up</p>
 						<p>Congratulations you have reached level {level}.</p>
 						<button on:click={handleHide}>Continue</button>
 					{:else}
-						<h1>Who had the hit?</h1>
+						<p class="titletext">Who had the hit?</p>
 						<p class="thintext">Given the song title, year and peak position the question remains exactly that…</p>
 						<p class="thintext">If you score 100 points or more you'll get your name on the leaderboard. What an honor!</p>
 						<p>Get ready for level {level}.</p>
@@ -174,7 +174,7 @@
 							<h2 class="question-info" in:fade={{ duration: 800 }}>{data.question_info}</h2>
 						{/key}
 						{#key data.question}
-							<h1 class="question" in:fade={{ duration: 800 }}>{data.question}</h1>
+							<p class="titletext" in:fade={{ duration: 800 }}>{data.question}</p>
 						{/key}
 					</div>
 					{#key data.answers}
@@ -249,6 +249,8 @@
 			0.05em 0.005em 0 rgba(0, 0, 0, 1), 0em 0.08em 0 rgba(0, 0, 0, 1),
 			0.05em 0.08em 0 rgba(0, 0, 0, 1), 0px -0.03em 0 rgba(0, 0, 0, 1),
 			-0.03em -0.03em 0 rgba(0, 0, 0, 1), -0.03em 0.08em 0 rgba(0, 0, 0, 1), -0.03em 0 0 rgba(0, 0, 0, 1);
+		
+		
 		
 }
 
@@ -348,6 +350,11 @@
 
 	.thintext {
 	font-weight: 100;
+	}
+
+	.titletext {
+	font-weight: 100;
+	font-size: 2em;
 	}
 /*
 	.quest-form button[disabled] {
