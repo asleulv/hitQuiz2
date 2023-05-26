@@ -143,7 +143,7 @@ def update():
 		session['qid'] = q.id
 
 		# Building the actual question
-		question = f"'{q.song}'"
+		question = f'"{q.song}"'
 		question_info = f"#{q.peak} in {q.year}"
 
 	# Check if game is over
