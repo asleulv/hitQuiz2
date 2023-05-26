@@ -128,7 +128,10 @@
 					<p>You finished the quiz with {score} points.</p>
 					<p>{#if score < 100}100 points are required for a place on the leaderboard.{:else}You have earned a place on the leaderboard!{/if}</p>
 					<ScoreForm success={score >= 100} />
-					<button on:click={handleClick}>Try Again</button>
+					<div class="button-container">
+						<button on:click={handleClick}>Share results</button>
+						<button on:click={handleClick}>Try Again</button>
+					</div>
 				</InfoScreen>
 			{:else if state == 1}
 				<InfoScreen success={level > 1}>
@@ -279,6 +282,12 @@
 		background-size: 400% 400%; 
 		animation: gradient 15s ease infinite;
 	}
+
+	.button-container {
+    display: flex;
+	justify-content: center;
+    gap: 10px; 
+    }
 /*
 	.quest-form button[disabled] {
 		color: #dedede;
