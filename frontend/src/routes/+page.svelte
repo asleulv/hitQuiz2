@@ -3,6 +3,7 @@
 	import { Confetti } from 'svelte-confetti';
 	import InfoScreen from '$lib/components/InfoScreen.svelte';
 	import Modal from '$lib/components/Modal.svelte';
+	import Button from '$lib/components/Button.svelte';
 	import ScoreForm from '$lib/components/ScoreForm.svelte';
 	import ScoreList from '$lib/components/ScoreList.svelte';
 	import Stats from '$lib/components/Stats.svelte';
@@ -46,10 +47,29 @@
 		}).then(x => x.json());
 	};
 
+	/*
 	const handleClick = () => {
 		state = 1;
 		timer.reset();
 		promise = fetch('/questions/').then(x => x.json());
+	};
+*/
+	const handleClick = (file) => {
+		switch (file) {
+			case 'tryagain':
+			state = 1;
+			timer.reset();
+			promise = fetch('/questions/').then(x => x.json());
+			break; // Add break statement here
+
+			case 'share':
+			promise = fetch('/share/').then(x => x.json());
+			break; // Add break statement here
+
+			default:
+			console.log('Invalid file:', file);
+			break;
+		}
 	};
 
 	const handleHide = () => {
@@ -129,8 +149,8 @@
 					<p>{#if score < 100}100 points are required for a place on the leaderboard.{:else}You have earned a place on the leaderboard!{/if}</p>
 					<ScoreForm success={score >= 100} />
 					<div class="button-container">
-						<button on:click={handleClick}>Share results</button>
-						<button on:click={handleClick}>Try Again</button>
+						<Button type="secondary" handleClick={handleClick} goToUrl="share">📈 Share results</Button>
+						<Button type="secondary" handleClick={handleClick} goToUrl="tryagain">↻ Try Again</Button>
 					</div>
 				</InfoScreen>
 			{:else if state == 1}
