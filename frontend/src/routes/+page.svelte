@@ -124,8 +124,9 @@
 		{:then data}
 			{#if state == 2}
 				<InfoScreen success={score > 1}>
-					<h1>{#if score > 0}Congratulations!{:else}Sorry!{/if}</h1>
+					<h1>{#if score > 99}Well done!{:else if (score === 0)}Very poor!{:else}Meh...{/if}</h1>
 					<p>You finished the quiz with {score} points.</p>
+					<p>{#if score < 100}100 points are required for a place on the leaderboard.{:else}You have earned a place on the leaderboard!{/if}</p>
 					<ScoreForm success={score >= 100} />
 					<button on:click={handleClick}>Try Again</button>
 				</InfoScreen>

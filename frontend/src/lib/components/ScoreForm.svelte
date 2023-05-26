@@ -74,7 +74,7 @@
 	.highscores {
 		display: inline-block;
 		overflow: auto;
-		height: 212px;
+/*		height: 212px;*/	
 		margin: 0.64rem 0;
 	}
 
