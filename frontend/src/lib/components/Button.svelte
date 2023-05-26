@@ -1,4 +1,5 @@
 <script>
+    
     export let type = 'primary';
     export let flat = false;
     export let inverse = false;
@@ -7,7 +8,8 @@
 
     const handleClickWrapper = () => {
     handleClick(goToUrl);
-  };
+    };
+
 </script>
 
 <button class={type} on:click={handleClickWrapper}>
@@ -23,53 +25,25 @@
         font-weight: light;
         box-shadow: 1px, 2px, 3px rgba(0, 0, 0, 0.2)
     }
-    .primary {
-        align-items: center;
-        background-color: #fff;
-        border: 2px solid #000;
-        box-sizing: border-box;
-        color: #000;
-        cursor: pointer;
-        display: inline-flex;
-        fill: #000;
-        font-family: Inter,sans-serif;
-        font-size: 16px;
-        font-weight: 600;
-        height: 48px;
-        justify-content: center;
-        letter-spacing: -.8px;
-        line-height: 24px;
-        min-width: 140px;
+    .primary{
+        display: inline-block;
         outline: 0;
-        padding: 0 17px;
-        text-align: center;
-        text-decoration: none;
-        transition: all .3s;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-    }
-
-    .primary:focus {
-        color: #171e29;
-    }
-
-    .primary:hover {
-        border-color: #06f;
-        color: #06f;
-        fill: #06f;
-    }
-
-    .primary:active {
-        border-color: #06f;
-        color: #06f;
-        fill: #06f;
-    }
-
-    @media (min-width: 768px) {
-    .primary {
-        min-width: 170px;
-    }
+        cursor: pointer;
+        border: 1px solid #000;
+        color: #000;
+        background: #fff;
+        font-size: 20px;
+        font-weight: 200;
+        line-height: 28px;
+        padding: 12px 20px;
+        text-align:center;
+        transition-duration: .15s;
+        transition-property: all;
+        transition-timing-function: cubic-bezier(.4,0,.2,1);
+    }  
+    .primary:hover{
+        background: rgb(0, 170, 255);
+        color: white;
     }
 
     .secondary {
@@ -83,7 +57,6 @@
         color: #36395A;
         cursor: pointer;
         display: inline-flex;
-        font-family: "JetBrains Mono",monospace;
         height: 48px;
         justify-content: center;
         line-height: 1;

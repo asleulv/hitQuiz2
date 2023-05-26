@@ -145,12 +145,12 @@
 			{#if state == 2}
 				<InfoScreen success={score > 1}>
 					<h1>{#if score > 99}🥳 Well done!{:else if (score === 0)}😖 Very poor!{:else}😐 Meh...{/if}</h1>
-					<p>You finished the quiz with {score} points.</p>
-					<p>{#if score < 100}100 points are required for a place on the leaderboard.{:else}You have earned a place on the leaderboard!{/if}</p>
-					<ScoreForm success={score >= 100} />
+					<p class="thintext">You finished the quiz with {score} points.</p>
+					<p class="thintext">{#if score < 100}100 points are required for a place on the leaderboard.{:else}You have earned a place on the leaderboard!{/if}</p>
+					{#if score > 0}<ScoreForm success={score >= 100} />{/if}
 					<div class="button-container">
-						<Button type="secondary" handleClick={handleClick} goToUrl="share">📈 Share results</Button>
-						<Button type="secondary" handleClick={handleClick} goToUrl="tryagain">↻ Try Again</Button>
+						<Button type="primary" handleClick={handleClick} goToUrl="share">📈 Share results</Button>
+						<Button type="primary" handleClick={handleClick} goToUrl="tryagain">↻ Try Again</Button>
 					</div>
 				</InfoScreen>
 			{:else if state == 1}
@@ -161,8 +161,8 @@
 						<button on:click={handleHide}>Continue</button>
 					{:else}
 						<h1>Who had the hit?</h1>
-						<p>Given the song title, year and peak position the question remains exactly that…</p>
-						<p>If you score 100 points or more you'll get your name on the leaderboard. What an honor!</p>
+						<p class="thintext">Given the song title, year and peak position the question remains exactly that…</p>
+						<p class="thintext">If you score 100 points or more you'll get your name on the leaderboard. What an honor!</p>
 						<p>Get ready for level {level}.</p>
 						<button on:click={handleHide} class="btn">Let's go!</button>
 					{/if}
@@ -294,7 +294,7 @@
 	}
 
 	.quest-form button:hover {
-		background-color: #dedede;
+		background-color: #d6d6d6;
 	}
 
 	.quest-form button:active {
@@ -308,6 +308,10 @@
 	justify-content: center;
     gap: 10px; 
     }
+
+	.thintext {
+	font-weight: 100;
+	}
 /*
 	.quest-form button[disabled] {
 		color: #dedede;
