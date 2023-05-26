@@ -115,13 +115,13 @@
 </script>
 
 <svelte:head>
-  <title>🔥hitQuiz - Who had the hit?</title>
+  <title>🔥hitQuiz.me - Who had the hit?</title>
 </svelte:head>
 
 <div class="app" style:background-color={$background}>
 	<div class="wrapper">
 		<div class="hud">
-			<div class="brand">🔥hitQuiz</div>
+			<div class="brand">🔥hitQuiz.me</div>
 			<Timer bind:this={timer} on:stop={handleStop} />
 			<div class="score-wrapper">
 				{#key level}
