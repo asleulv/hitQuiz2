@@ -121,7 +121,7 @@
 <div class="app" style:background-color={$background}>
 	<div class="wrapper">
 		<div class="hud">
-			<div class="brand">🔥hitQuiz.me</div>
+			<div class="brand2">🔥hitQuiz.me</div>
 			<Timer bind:this={timer} on:stop={handleStop} />
 			<div class="score-wrapper">
 				{#key level}
@@ -238,6 +238,30 @@
 		font-size: 1.8em;
 		margin-right: auto;
 	}
+
+	.brand2 {
+		font-weight: 750;
+		font-size: 1.8em;
+		margin-right: auto;
+		padding: 0;
+		color: white;
+		text-shadow: 0 0.1em 20px rgba(0, 0, 0, 1), 0.05em -0.03em 0 rgba(0, 0, 0, 1),
+			0.05em 0.005em 0 rgba(0, 0, 0, 1), 0em 0.08em 0 rgba(0, 0, 0, 1),
+			0.05em 0.08em 0 rgba(0, 0, 0, 1), 0px -0.03em 0 rgba(0, 0, 0, 1),
+			-0.03em -0.03em 0 rgba(0, 0, 0, 1), -0.03em 0.08em 0 rgba(0, 0, 0, 1), -0.03em 0 0 rgba(0, 0, 0, 1);
+		
+}
+
+@keyframes bopB {
+  0% {
+    transform: scale(0.9);
+  }
+  80%,
+  100% {
+    transform: scale(1) rotateZ(-3deg);
+  }
+}
+
 
 	.score-wrapper {
 		display: flex;
