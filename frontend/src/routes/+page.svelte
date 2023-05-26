@@ -115,13 +115,13 @@
 </script>
 
 <svelte:head>
-  <title>hitQuiz - Who had the hit?</title>
+  <title>🔥hitQuiz - Who had the hit?</title>
 </svelte:head>
 
 <div class="app" style:background-color={$background}>
 	<div class="wrapper">
 		<div class="hud">
-			<div class="brand">hitQuiz</div>
+			<div class="brand">🔥hitQuiz</div>
 			<Timer bind:this={timer} on:stop={handleStop} />
 			<div class="score-wrapper">
 				{#key level}
@@ -149,7 +149,7 @@
 					<p class="thintext">{#if score < 100}100 points are required for a place on the leaderboard.{:else}You have earned a place on the leaderboard!{/if}</p>
 					{#if score > 0}<ScoreForm success={score >= 100} />{/if}
 					<div class="button-container">
-						<Button type="primary" handleClick={handleClick} goToUrl="share">📈 Share results</Button>
+						<Button type="primary" handleClick={handleClick} goToUrl="share">〽️ Share results</Button>
 						<Button type="primary" handleClick={handleClick} goToUrl="tryagain">↻ Try Again</Button>
 					</div>
 				</InfoScreen>
@@ -164,7 +164,7 @@
 						<p class="thintext">Given the song title, year and peak position the question remains exactly that…</p>
 						<p class="thintext">If you score 100 points or more you'll get your name on the leaderboard. What an honor!</p>
 						<p>Get ready for level {level}.</p>
-						<button on:click={handleHide} class="btn">Let's go!</button>
+						<button on:click={handleHide} class="btn">🚀Let's go!</button>
 					{/if}
 				</InfoScreen>
 			{:else}
@@ -250,6 +250,19 @@
 		background-color: rgba(255,255,255,0.1);
 		border: 0;
 		border-radius: 24px;
+	}
+
+	.i-btn {
+		height: 20px;
+		width: 20px;
+		padding: 0;
+		border: 1px solid white;
+		border-radius: 50%;
+		background-color: rgba(255,255,255,0.1);
+		color: white;
+		cursor: pointer;
+		z-index: 1;
+		transition: background-color 0.5s ease, font-weight 0.5s ease;
 	}
 
 	.i-btn {

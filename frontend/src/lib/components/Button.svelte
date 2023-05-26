@@ -33,7 +33,7 @@
         color: #000;
         background: #fff;
         font-size: 20px;
-        font-weight: 200;
+        font-weight: 100;
         line-height: 28px;
         padding: 12px 20px;
         text-align:center;
