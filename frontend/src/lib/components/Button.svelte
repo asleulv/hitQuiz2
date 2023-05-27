@@ -5,6 +5,7 @@
     export let inverse = false;
     export let handleClick;
     export let goToUrl;
+    export let id = null; 
 
     const handleClickWrapper = () => {
     handleClick(goToUrl);
@@ -12,7 +13,7 @@
 
 </script>
 
-<button class={type} on:click={handleClickWrapper}>
+<button class={type} on:click={handleClickWrapper} id={id}>
     <slot></slot>
 </button>
 
