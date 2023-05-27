@@ -9,6 +9,7 @@
 	import Stats from '$lib/components/Stats.svelte';
 	import Tabs from '$lib/components/Tabs.svelte';
 	import Timer from '$lib/components/Timer.svelte';
+	import Tooltip from '$lib/components/Tooltip.svelte';
 	import { background } from '$lib/stores.js';
 	import { hexToRgb, hsvToRgb, rgbToHex, rgbToHsv } from '$lib/utils.js';
 
@@ -83,7 +84,6 @@
 				} catch(exc) {
 					console.error('Error: ', exc)
 				}
-				console.log(value);
 
 				break; // Add break statement here
 
@@ -171,8 +171,9 @@
 					<p class="thintext">{#if score < 100}100 points are required for a place on the leaderboard.{:else}You have earned a place on the leaderboard!{/if}</p>
 					{#if score > 0}<ScoreForm success={score >= 100} />{/if}
 					<div class="button-container">
-						<Button type="primary" handleClick={handleClick} goToUrl="share">〽️ Share results</Button>
+						<Button type="primary" handleClick={handleClick} goToUrl="share" id="share-btn">〽️ Share results</Button>
 						<Button type="primary" handleClick={handleClick} goToUrl="tryagain">↻ Try Again</Button>
+						<Tooltip target="#share-btn" trigger="click" position="top">Copied</Tooltip>
 					</div>
 				</InfoScreen>
 			{:else if state == 1}
