@@ -54,21 +54,43 @@
 		promise = fetch('/questions/').then(x => x.json());
 	};
 */
-	const handleClick = (file) => {
+	const handleClick = async (file) => {
 		switch (file) {
 			case 'tryagain':
-			state = 1;
-			timer.reset();
-			promise = fetch('/questions/').then(x => x.json());
-			break; // Add break statement here
+				state = 1;
+				timer.reset();
+				promise = fetch('/questions/').then(x => x.json());
+				break; // Add break statement here
 
 			case 'share':
-			promise = fetch('/share/').then(x => x.json());
-			break; // Add break statement here
+				// promise = fetch('/share/').then(x => x.json());
+				
+				if (!('clipboard' in navigator)) {
+					console.error('Clipboard not supported.');
+					return;
+				}
+
+				const chars = ['🟢','🔴','⚪'];
+				let stats = await fetch('/scores/stats').then(x => x.json());
+				let value = `Level:\t${level}\nScore:\t${score}\n` 
+					+ stats.map((l,i) => {
+							return `Level ${i+1}\t` + l.map(q => chars[q-1]).join('');
+					}).join('\n')
+					+ '\nVisit hitQuiz.me and try to beat me.';
+
+				try {
+					await navigator.clipboard.writeText(value);
+				} catch(exc) {
+					console.error('Error: ', exc)
+				}
+				console.log(value);
+
+				break; // Add break statement here
+
 
 			default:
-			console.log('Invalid file:', file);
-			break;
+				console.log('Invalid file:', file);
+				break;
 		}
 	};
 
