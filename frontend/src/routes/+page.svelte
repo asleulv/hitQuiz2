@@ -29,6 +29,7 @@
 	let state = 1;
 	let score = 0;
 	let level = 1;
+	let lives = 3;
 	let timer = null;
 
 	let promise = fetch('/questions/').then(x => x.json());
@@ -108,6 +109,7 @@
 	};
 
 	$: promise.then(data => { 
+		if (lives != data.lives) lives = data.lives;
 		if (score != data.points) score = data.points;
 		if (level != data.level) {
 			level = data.level; 
@@ -143,9 +145,14 @@
 <div class="app" style:background-color={$background}>
 	<div class="wrapper">
 		<div class="hud">
-			<div class="brand2">🎯hitQuiz.me</div>
+			<div class="brand2">🎯 hitQuiz.me</div>
 			<Timer bind:this={timer} on:stop={handleStop} />
 			<div class="score-wrapper">
+				{#key lives}
+					<div in:fade={{delay: 100, duration: 800}}>
+						{#each {length: lives} as _}❤️{/each}
+					</div>
+				{/key}
 				{#key level}
 					<div>Level: <span in:scale={{ delay: 100, duration: 800 }}>{level}</span></div>
 				{/key}
@@ -349,6 +356,7 @@
 		border: 1px solid #ddd;
 		border-radius: 3px;
 		background-color: #eee;
+		color: #000;
 		font-size: 0.85em;
 		transition-property: color, background-color;
 		transition-duration: 200ms;
@@ -456,7 +464,7 @@
 		}
 	}
 
-	@media only screen and (max-width: 480px) { /* 576*/
+	@media only screen and (max-width: 768px) { /* 576 */
 		.quest-form {
 			grid-template-columns: repeat(1, 1fr);
 		}
@@ -467,14 +475,11 @@
 
 		.hud {
 			min-height: 60px;
+			flex-direction: column;
 		}
 
-		.hud .score-wrapper {
-			max-width: 72px;
-			padding: 0.2rem;
-			background-color: inherit;
-			gap: .3rem;
-			padding: 0;
+		.brand2 {
+			margin: 0;
 		}
 	}
 </style>

@@ -67,4 +67,11 @@
 		color: #dedede;
 	}
 */
+
+	@media only screen and (max-width: 768px) { /* 576 */
+		div {
+			margin: 2.4rem 0 0;
+		}
+	}
+
 </style>

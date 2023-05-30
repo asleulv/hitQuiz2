@@ -74,7 +74,8 @@ def index():
 		question=question,
 		question_info=question_info,
 		alternatives=alternatives,
-		finished=False
+		finished=False, 
+		lives=3
 	)  
 
 
@@ -151,11 +152,14 @@ def update():
 	# - When the same question is asked again.
 	done = session['fails'] >= 3 or q.id in session['qids']
 
+	lives = 3 - int(session.get('fails', 3))
+
 	return jsonify(
 		level=level,
 		points=points,
 		question=question if not done else None,
 		question_info=question_info if not done else None,
 		alternatives=alternatives if not done else [],
-		finished=done
+		finished=done, 
+		lives=lives
 	)
