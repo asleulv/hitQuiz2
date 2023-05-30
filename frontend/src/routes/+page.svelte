@@ -194,7 +194,7 @@
 						<p class="thintext">Given the song title, year and peak position the question remains exactly that…</p>
 						<p class="thintext">If you score 100 points or more you'll get your name on the leaderboard. What an honor!</p>
 						<p>Get ready for level {level}.</p>
-						<button on:click={handleHide} class="btn">🚀Let's go!</button>
+						<button on:click={handleHide} class="btn">🚀 Let's go!</button>
 					{/if}
 				</InfoScreen>
 			{:else}
