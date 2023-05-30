@@ -47,6 +47,6 @@
 		background-color: red;
 	}
 	.type-3 {
-		background-color: gray;
+		background-color: rgb(255,255,255,.5);
 	}
 </style>

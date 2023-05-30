@@ -74,4 +74,12 @@
 		transform: translateX(-50%);
 		z-index: 1;
 	}
+
+	@media only screen and (max-width: 768px) { /* 576 */
+		svg {
+			position: relative;
+			left: 0;
+			transform: none;
+		}
+	}
 </style>

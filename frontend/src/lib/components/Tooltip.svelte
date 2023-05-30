@@ -1,5 +1,5 @@
 <script>
-	import { tick, onMount, onDestroy } from 'svelte';
+	import { onMount, tick } from 'svelte';
 
 	export let trigger;
 	export let target;
@@ -52,13 +52,7 @@
 
 	};
 
-	const unregisterListener = () => {
-		const elem = document.querySelector(target);
-		elem.removeEventListener(trigger, target);
-	};
-
 	onMount(registerListener);
-	onDestroy(unregisterListener);
 </script>
 
 {#if visible}
