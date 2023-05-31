@@ -46,8 +46,8 @@ def index():
 	while len(alternatives) < 4:
 		alt = Hit.query\
 			.filter(
-				Hit.peak == LEVELS[level]['peak'], 
-				Hit.weeks > LEVELS[level]['weeks'], 
+				Hit.peak <= LEVELS[level]['peak'], 
+				Hit.weeks >= LEVELS[level]['weeks'], 
 				Hit.year.in_(range(LEVELS[level]['f_range'],LEVELS[level]['t_range'])), 
 				Hit.artist.not_in(alternatives), 
 				# Hit.id.not_in(session['seen_songs']) # Why should this limitation exist?
