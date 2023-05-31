@@ -1,15 +1,27 @@
 <script>
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
-	
-	const LIMIT = 10; 
+	import { getQueryString } from '$lib/utils.js';
+
+	const LIMIT = 20; 
 	const store = writable({}); 
 
+	let checked = false;
+
 	onMount(async () => {
-		const response = await fetch('/scores/');
+		await load();
+	});
+
+	const load = async () => {
+		const params = { per_page: LIMIT };
+		if (!checked) {
+			params['d'] = new Date().toISOString().slice(0, 10);
+		}
+		let url = `/scores/?` + getQueryString(params);
+		const response = await fetch(url); 
 		const data = await response.json();
 		store.set(data);
-	});
+	};
 
 	const loadMore = () => {
 		const currentData = get(store); 
@@ -55,6 +67,15 @@
 	}
 </script>
 
+<div style="margin: 1.5rem;">
+	<span style="vertical-align: super; padding: .3rem">Today</span>
+	<label class="switch">
+		<input type="checkbox" bind:checked={checked} on:change={load}>
+		<span class="slider round"></span>
+	</label>
+	<span style="vertical-align: super; padding: .3rem">All</span>
+</div>
+
 <div class="scroller">
 	<table>
 		<tr>
@@ -91,7 +112,8 @@
 		height: auto;
 		display: block;
 		overflow: auto;
-		margin: 1.5rem 0;
+/*		margin: 1.5rem 0;*/
+		margin: 1rem 0 1.5rem;
 	}
 	table {
 		width: 100%;
@@ -104,5 +126,63 @@
 	}
 
 
+	/* --- */
+
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 48px;
+		height: 24px;
+	}
+
+	.switch input {
+		display:none;
+	}
+
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		border: 2px solid #fff;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+
+	.slider:before {
+		position: absolute;
+		content: '';
+		height: 16px;
+		width: 16px;
+		left: 2px;
+		bottom: 2px;
+		background-color: white;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+
+	input:checked + .slider {
+	}
+
+	input:focus + .slider {
+		box-shadow: 0 0 1px #2196F3;
+	}
+
+	input:checked + .slider:before {
+		-webkit-transform: translateX(24px);
+		-ms-transform: translateX(24px);
+		transform: translateX(24px);
+	}
+
+	.slider.round {
+		border-radius: 24px;
+	}
+
+	.slider.round:before {
+		border: 0px;
+		border-radius: 50%;
+	}
 
 </style>

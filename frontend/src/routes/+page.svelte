@@ -17,12 +17,14 @@
 		{ 
 			label: 'Stats',
 			value: 1,
-			component: Stats
+			component: Stats, 
+ 			props: {}
 		},
 		{ 
-			label: 'Leaderboard',
+			label: "Leaderboard",
 			value: 2,
-			component: ScoreList
+			component: ScoreList, 
+ 			props: {}
 		},
   ];
 

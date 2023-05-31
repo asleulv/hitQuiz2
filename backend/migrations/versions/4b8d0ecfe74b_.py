@@ -7,7 +7,7 @@ Create Date: 2023-05-16 13:58:50.611491
 """
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.sql import func
 
 # revision identifiers, used by Alembic.
 revision = '4b8d0ecfe74b'
@@ -22,6 +22,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('points', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True),
+           nullable=False, unique=False, index=False,
+           default=func.now()),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
