@@ -163,4 +163,4 @@ cython_debug/
 
 .DS_Store
 pyvenv.cfg
-src/static/
+src/quiz/static/
