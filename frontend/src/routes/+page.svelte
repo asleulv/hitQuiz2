@@ -355,6 +355,7 @@
 
 	.quest-form button {
 		padding: 0.5rem 1.5rem;
+		color: black;
 		border: 1px solid #ddd;
 		border-radius: 3px;
 		background-color: #eee;
