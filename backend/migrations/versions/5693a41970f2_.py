@@ -22,9 +22,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('artist', sa.String(length=150), nullable=True),
     sa.Column('song', sa.String(length=150), nullable=True),
-    sa.Column('year', sa.String(length=4), nullable=True),
-    sa.Column('peak', sa.String(length=3), nullable=True),
-    sa.Column('weeks', sa.String(length=3), nullable=True),
+    sa.Column('year', sa.Integer(), nullable=True),
+    sa.Column('peak', sa.Integer(), nullable=True),
+    sa.Column('weeks', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('hit', schema=None) as batch_op:
