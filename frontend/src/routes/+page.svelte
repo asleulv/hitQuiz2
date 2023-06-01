@@ -273,7 +273,7 @@
 
 	.brand2 {
 		font-weight: 750;
-		font-size: 1.8em;
+		font-size: 1.4em;
 		margin-right: auto;
 		padding: 0;
 		color: white;
@@ -299,12 +299,13 @@
 
 	.score-wrapper {
 		display: flex;
+		font-size: medium;
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
 		flex-wrap: wrap;
 		padding: 0.64rem;
-		gap: .6rem;
+		gap: 1rem;
 		background-color: rgba(255,255,255,0.1);
 		border: 0;
 		border-radius: 24px;
