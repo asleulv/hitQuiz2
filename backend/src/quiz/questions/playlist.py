@@ -4,8 +4,8 @@ import requests
 import json
 
 # Set up authentication
-client_id = 'fa26bc20d5c84de9a39e63f0ac085c20'
-client_secret = '743447ec555a4497a1d96206ee9d1c4f'
+client_id = 'N/A'
+client_secret = 'N/A'
 client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
