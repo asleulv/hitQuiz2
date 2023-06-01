@@ -18,20 +18,29 @@ blueprint = Blueprint(
 	url_prefix='/scores'
 )
 
+from datetime import date
+
 @blueprint.route('/')
 def index():
 	page = request.args.get('page', 0, type=int)
+	per_page = request.args.get('per_page', 10, type=int)
+	dt = request.args.get('d', None, type=date.fromisoformat)
 
-	ranks = Score.query.with_entities(
+	query = Score.query.with_entities(
 		Score.id, 
 		Score.name, 
 		Score.points, 
 		func.row_number().over(order_by=Score.points.desc()).label('rank'), 
-	).order_by(Score.points.desc()).limit(10).offset(page*10).all()
+	)
+
+	if dt: 
+		query = query.filter(func.date(Score.created_at) == dt)
+
+	ranks = query.order_by(Score.points.desc()).limit(per_page).offset(page*per_page).all()
 	
 	meta = {}
-	if len(ranks) == 10: 
-		meta['next'] = url_for('.index', page=page+1)
+	if len(ranks) == per_page: 
+		meta['next'] = url_for('.index', page=page+1, per_page=per_page, d=dt)
 
 	scores_schema = RankSchema(many=True)
 	return jsonify(

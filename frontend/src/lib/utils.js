@@ -1,3 +1,10 @@
+export const getQueryString = (params) => {
+	return Object.keys(params).map(k => {
+		return `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`;
+	}).join('&');
+}
+
+
 export const hexToRgb = hex =>
 	hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
 		,(m, r, g, b) => '#' + r + r + g + g + b + b)
