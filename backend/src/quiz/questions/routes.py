@@ -48,7 +48,9 @@ def index():
 			.filter(
 				Hit.peak <= LEVELS[level]['peak'], 
 				Hit.weeks >= LEVELS[level]['weeks'], 
-				Hit.year.in_(range(LEVELS[level]['f_range'],LEVELS[level]['t_range'])), 
+				# Hit.year.in_(range(LEVELS[level]['f_range'],LEVELS[level]['t_range'])), 
+				# Modifying year range so that the alternatives are from same era
+				Hit.year.in_(range(q.year-5,q.year+5)), 
 				Hit.artist.not_in(alternatives), 
 				# Hit.id.not_in(session['seen_songs']) # Why should this limitation exist?
 			).order_by(func.random()).limit(1).first()
