@@ -1,9 +1,10 @@
 
 def find_parts(t, p):
-	tokens = t.split(' ')
+	delim = ' '
+	tokens = t.split(delim)
 	for i in range(len(tokens)):
-		for j in range(i, len(tokens)):
-			if p == ' '.join(tokens[i:j+1]):
+		for j in range(i + 1, len(tokens) + 1):
+			if p == delim.join(tokens[i:j]):
 				return True
 	return False
 
