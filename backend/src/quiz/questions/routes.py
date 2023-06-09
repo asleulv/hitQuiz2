@@ -11,7 +11,7 @@ from flask import (
 	request, 
 	session
 )
-from sqlalchemy import func
+from sqlalchemy import func, or_
 import random
 
 
@@ -51,7 +51,8 @@ def index():
 				# Hit.year.in_(range(LEVELS[level]['f_range'],LEVELS[level]['t_range'])), 
 				# Modifying year range so that the alternatives are from same era
 				Hit.year.in_(range(q.year-5,q.year+5)), 
-				Hit.artist.not_in(alternatives), 
+				# Hit.artist.not_in(alternatives), 
+				or_(*[~Hit.artist.like(f'%{artist}%') for artist in alternatives])
 				# Hit.id.not_in(session['seen_songs']) # Why should this limitation exist?
 			).order_by(func.random()).limit(1).first()
 		alternatives.append(alt.artist)
@@ -131,12 +132,13 @@ def update():
 		while len(alternatives) < 4:
 			alt = Hit.query\
 				.filter(
-					Hit.peak <= LEVELS[level_key]['peak'], 
-					Hit.weeks >= LEVELS[level_key]['weeks'], 
-					# Hit.year.in_(range(LEVELS[level_key]['f_range'],LEVELS[level_key]['t_range'])), 
+					Hit.peak <= LEVELS[level]['peak'], 
+					Hit.weeks >= LEVELS[level]['weeks'], 
+					# Hit.year.in_(range(LEVELS[level]['f_range'],LEVELS[level]['t_range'])), 
 					# Modifying year range so that the alternatives are from same era
 					Hit.year.in_(range(q.year-5,q.year+5)), 
-					Hit.artist.not_in(alternatives), 
+					# Hit.artist.not_in(alternatives), 
+					or_(*[~Hit.artist.like(f'%{artist}%') for artist in alternatives])
 					# Hit.id.not_in(session['seen_songs']) # Why should this limitation exist?
 				).order_by(func.random()).limit(1).first()
 			alternatives.append(alt.artist)

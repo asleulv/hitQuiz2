@@ -87,12 +87,14 @@
 		<tr style="border: {item.points > 1500 || item.points > 1000 ? '1px solid rgba(255, 215, 0, 0.6)' : '1px solid rgba(255, 255, 255, 0.34)'};">
 		  <td>{item.rank}</td>
 		  <td style="color: {item.points > 1500 ? 'gold' : (item.points > 1000 ? 'white' : 'lightgrey')}; text-align: left;">
-			{#if item.points > 1500}
-			  <span style="margin-right: 0.25rem;">🔥</span>
+			{#if item.points > 3000}
+				<span style="margin-right: 0.25rem;">🎯</span>
+			{:else if item.points > 1500}
+				<span style="margin-right: 0.25rem;">🔥</span>
 			{:else if item.points > 1000}
-			  <span style="margin-right: 0.25rem;">⭐️</span>
+				<span style="margin-right: 0.25rem;">⭐️</span>
 			{:else}
-			  <span style="margin-right: 0.25rem;">👶🏽</span>
+				<span style="margin-right: 0.25rem;">👶🏽</span>
 			{/if}
 			{item.name}
 		  </td>
