@@ -5,7 +5,7 @@ from .constants import (
 	QUESTIONS_PER_LEVEL
 )
 from .models import Hit
-from .utilities import find_parts
+from .utils import find_parts
 from flask import (
 	Blueprint, 
 	current_app, 
