@@ -5,13 +5,15 @@ from .constants import (
 	QUESTIONS_PER_LEVEL
 )
 from .models import Hit
+from .utilities import find_parts
 from flask import (
 	Blueprint, 
+	current_app, 
 	jsonify, 
 	request, 
 	session
 )
-from sqlalchemy import func
+from sqlalchemy import func # , or_
 import random
 
 
@@ -43,7 +45,8 @@ def index():
 	alternatives = [q.artist]
 
 	# Getting 3 random artists from same level
-	while len(alternatives) < 4:
+	fail_count = 0
+	while len(alternatives) < 4 and fail_count < 12:
 		alt = Hit.query\
 			.filter(
 				Hit.peak <= LEVELS[level]['peak'], 
@@ -54,6 +57,13 @@ def index():
 				Hit.artist.not_in(alternatives), 
 				# Hit.id.not_in(session['seen_songs']) # Why should this limitation exist?
 			).order_by(func.random()).limit(1).first()
+		if not alt:
+			current_app.logger.warning('No suitable answer found in database.')
+			break
+		if any(find_parts(alt.artist, artist) or find_parts(artist, alt.artist) for artist in alternatives):
+			fail_count += 1
+			current_app.logger.warning('No suitable answer found. %d attempts left.', 12 - fail_count)
+			continue
 		alternatives.append(alt.artist)
 
 	# Shuffle the alternatives
@@ -76,7 +86,7 @@ def index():
 		question=question,
 		question_info=question_info,
 		alternatives=alternatives,
-		finished=False, 
+		finished=len(alternatives) < 4, 
 		lives=3
 	)  
 
@@ -128,7 +138,8 @@ def update():
 		alternatives = [q.artist]
 
 		# Getting 3 random artists from same level
-		while len(alternatives) < 4:
+		fail_count = 0
+		while len(alternatives) < 4 and fail_count < 12:
 			alt = Hit.query\
 				.filter(
 					Hit.peak <= LEVELS[level_key]['peak'], 
@@ -137,8 +148,19 @@ def update():
 					# Modifying year range so that the alternatives are from same era
 					Hit.year.in_(range(q.year-5,q.year+5)), 
 					Hit.artist.not_in(alternatives), 
+					# or_(
+					# 	or_(*[~Hit.artist.contains(artist) for artist in alternatives]), 
+					# 	or_(*[~literal(artist).contains(Hit.artist) for artist in alternatives])
+					# )
 					# Hit.id.not_in(session['seen_songs']) # Why should this limitation exist?
 				).order_by(func.random()).limit(1).first()
+			if not alt:
+				current_app.logger.warning('No suitable answer found in database.')
+				break
+			if any(find_parts(alt.artist, artist) or find_parts(artist, alt.artist) for artist in alternatives):
+				fail_count += 1
+				current_app.logger.warning('No suitable answer found. %d attempts left.', 12 - fail_count)
+				continue
 			alternatives.append(alt.artist)
 
 		# Shuffle the alternatives
@@ -154,7 +176,7 @@ def update():
 	# Check if game is over
 	# - When three failed attempts have been achieved.
 	# - When the same question is asked again.
-	done = session['fails'] >= 3 or q.id in session['qids']
+	done = session['fails'] >= 3 or q.id in session['qids'] or len(alternatives) < 4
 
 	lives = 3 - int(session.get('fails', 3))
 
