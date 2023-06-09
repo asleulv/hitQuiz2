@@ -181,16 +181,8 @@
 					{#if score > 0}<ScoreForm success={score >= 100} />{/if}
 					<div class="button-container">
 						<Button type="primary" handleClick={handleClick} goToUrl="share" id="share-btn">〽️ Share results</Button>
-						<Button type="primary" handleClick={handleClick} goToUrl="share" id="share-btn">❗️Your mistakes</Button>
 						<Button type="primary" handleClick={handleClick} goToUrl="tryagain">↻ Try Again</Button>
 						<Tooltip target="#share-btn" trigger="click" position="top">Copied</Tooltip>
-					</div>
-					<div>
-						{#key data.failed_songs}
-							{#each data.failed_songs as song}
-								<li>{song.artist} - {song.song}</li>
-							{/each}
-						{/key}
 					</div>
 				</InfoScreen>
 			{:else if state == 1}
