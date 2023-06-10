@@ -110,8 +110,8 @@ def stats():
 	d.append(l + [3 for _ in range(7 - len(l))])
 
 	failed_hit_ids = list(set(session['seen_songs']) - set(session['qids']) - set([session['qid']]))
-	failed_hits = Hit.query.filter(Hit.id.in_(failed_hit_ids)).all()
-	# failed_hits = [Hit.query.get(id) for id in failed_hit_ids]
+	# failed_hits = Hit.query.filter(Hit.id.in_(failed_hit_ids)).all()
+	failed_hits = [Hit.query.get(id) for id in failed_hit_ids]
 	hits_schema = HitSchema(many=True)
 	hits_data = hits_schema.dump(failed_hits)
 
