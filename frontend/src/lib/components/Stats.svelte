@@ -2,18 +2,34 @@
 	import { onMount } from 'svelte';
 	import { writable, get } from 'svelte/store';
 
-	const store = writable([]); 
+	const stats = writable([]); 
+	const songs = writable([]);
 
 	onMount(async () => {
 		const resp = await fetch('/scores/stats');
 		const data = await resp.json();
-		store.set(data);
+		stats.set(data.fail_data);
+		songs.set(data.fail_songs);
 	});
 </script>
 
 <div class="scroller">
+
+
+	<ul class="song-list">
+		{#each $songs as hit}
+			<li>
+				<div>
+					<span class="artist">{hit.artist}</span>
+					<span class="song">{hit.song}</span>
+				</div>
+			</li>
+		{:else}
+			<li>No songs available.</li>
+		{/each}
+	</ul>
 	<table>
-		{#each $store as level, i}
+		{#each $stats as level, i}
 			<tr>
 				<td>Level {i+1}</td>
 				{#each level as question}
@@ -38,7 +54,7 @@
 		border-collapse: collapse;
 	}
 	table, th, td {
-		border: 1px solid  #ffffff57;
+		border: 1px solid #ffffff;
 	}
 	.type-1 {
 		background-color: lime;
@@ -48,5 +64,28 @@
 	}
 	.type-3 {
 		background-color: rgb(255,255,255,.5);
+	}
+	.song-list {
+		margin-top: 0rem;
+		text-align: initial;
+		padding-left: 0; /* 1.4rem; */
+		list-style: None;
+		border: 1px solid #fff;
+		border-radius: 3px;
+	}
+	.song-list > li {
+		padding: 1rem;
+		border-bottom: 1px dotted #fff;
+	}
+	.song-list > li:last-child {
+		border-bottom: none;
+	}
+	.artist, .song {
+		display: block;
+		font-weight: 300;
+	}
+	.artist {
+		font-weight: 700;
+		font-size: small;
 	}
 </style>

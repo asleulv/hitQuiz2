@@ -1,4 +1,6 @@
 from .. import db
+from ..questions.models import Hit
+from ..questions.schemas import HitSchema
 from .models import Score
 from .schemas import RankSchema
 from flask import (
@@ -106,6 +108,15 @@ def stats():
 			l = []
 			i = 0
 	d.append(l + [3 for _ in range(7 - len(l))])
-	
-	return jsonify(d)
+
+	failed_hit_ids = list(set(session['seen_songs']) - set(session['qids']) - set([session['qid']]))
+	# failed_hits = Hit.query.filter(Hit.id.in_(failed_hit_ids)).all()
+	failed_hits = [Hit.query.get(id) for id in reversed(failed_hit_ids)]
+	hits_schema = HitSchema(many=True)
+	hits_data = hits_schema.dump(failed_hits)
+
+	return jsonify(
+		fail_data=d, 
+		fail_songs=hits_data
+	)
 

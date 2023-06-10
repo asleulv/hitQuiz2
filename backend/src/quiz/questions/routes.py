@@ -75,8 +75,6 @@ def index():
 	session['qids'] = [] 
 	# Fail counter
 	session['fails'] = 0
-	# List of 'failed' songs
-	session['failed_songs'] = []
 
 	# Building the actual question
 	question = f"'{q.song}'"
@@ -111,7 +109,6 @@ def update():
 
 	else:
 		session['fails'] += 1 
-		session['failed_songs'].append({'artist': q.artist, 'song': q.song})
 
 	# Generate the next question
 	# - What if level 21 is reached? (SOLVED)
@@ -190,6 +187,5 @@ def update():
 		question_info=question_info if not done else None,
 		alternatives=alternatives if not done else [],
 		finished=done, 
-		lives=lives,
-		failed_songs = session['failed_songs']
+		lives=lives
 	)
