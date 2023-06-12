@@ -53,7 +53,7 @@ def index():
 				Hit.weeks >= LEVELS[level]['weeks'], 
 				# Hit.year.in_(range(LEVELS[level]['f_range'],LEVELS[level]['t_range'])), 
 				# Modifying year range so that the alternatives are from same era
-				Hit.year.in_(range(q.year-5,q.year+5)), 
+				Hit.year.in_(range(q.year-10,q.year+10)), 
 				Hit.artist.not_in(alternatives), 
 				# Hit.id.not_in(session['seen_songs']) # Why should this limitation exist?
 			).order_by(func.random()).limit(1).first()
@@ -146,7 +146,7 @@ def update():
 					Hit.weeks >= LEVELS[level_key]['weeks'], 
 					# Hit.year.in_(range(LEVELS[level_key]['f_range'],LEVELS[level_key]['t_range'])), 
 					# Modifying year range so that the alternatives are from same era
-					Hit.year.in_(range(q.year-5,q.year+5)), 
+					Hit.year.in_(range(q.year-10,q.year+10)), 
 					Hit.artist.not_in(alternatives), 
 					# or_(
 					# 	or_(*[~Hit.artist.contains(artist) for artist in alternatives]), 
