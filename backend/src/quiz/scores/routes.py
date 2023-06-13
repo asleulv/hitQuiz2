@@ -58,7 +58,7 @@ def create():
 	score = None
 	if points >= 100 \
 		and 2 <= len(name) <= 20 \
-		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name): # $ missing but eliminates important characters.
+		and re.match(r'^[A-Za-zÀ-ž0-9.\-_]+(?: [A-Za-zÀ-ž0-9.\-_]+)*$', name): 
 		
 		score = Score(name=name, points=points)
 		db.session.add(score)

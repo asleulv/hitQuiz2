@@ -38,7 +38,7 @@
 					placeholder="user123" 
 					minlength="2" 
 					maxlength="20" 
-					pattern="[A-Za-z]+[A-Za-z\-\_]*[0-9]*"
+					pattern="^[A-Za-zÀ-ž0-9.\-_]+(?: [A-Za-zÀ-ž0-9.\-_]+)*$"
 				/>
 				<button type="submit">Send</button>
 			</div>
