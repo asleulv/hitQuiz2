@@ -72,9 +72,10 @@ def index():
 	# The id of the current question
 	session['qid'] = q.id
 	# The id of every correct guess
-	session['qids'] = [] 
+	# session['qids'] = [] 
 	# Fail counter
 	session['fails'] = 0
+	session['fids'] = [] 
 
 	# Building the actual question
 	question = f"'{q.song}'"
@@ -100,8 +101,8 @@ def update():
 	# Validate given answer
 	q = Hit.query.get_or_404(qid)
 	if request.json.get('value', '') == q.artist: 
-		session['qids'].append(q.id) 
-		session.modified = True
+		# session['qids'].append(q.id) 
+		# session.modified = True
 		points = session['points'] = (points + level*POINTS_PER_QUESTION)
 		if points >= sum(QUESTIONS_PER_LEVEL*x*POINTS_PER_QUESTION for x in range(1, level + 1)): 
 			level = session['level'] = level + 1
@@ -109,6 +110,8 @@ def update():
 
 	else:
 		session['fails'] += 1 
+		session['fids'].append(q.id)
+		session.modified = True
 
 	# Generate the next question
 	# - What if level 21 is reached? (SOLVED)
@@ -131,8 +134,8 @@ def update():
 
 	if qs: 
 		q = qs
-		session['seen_songs'].append(q.id)
-		session.modified = True
+		# session['seen_songs'].append(q.id)
+		# session.modified = True
 
 		# Generate the 4 alternatives including the correct answer
 		alternatives = [q.artist]
@@ -172,11 +175,16 @@ def update():
 		# Building the actual question
 		question = f'"{q.song}"'
 		question_info = f"#{q.peak} in {q.year}"
+	else:
+		current_app.logger.warning('No suitable question found in database.')
 
 	# Check if game is over
 	# - When three failed attempts have been achieved.
 	# - When the same question is asked again.
-	done = session['fails'] >= 3 or q.id in session['qids'] or len(alternatives) < 4
+	done = session['fails'] >= 3 or q.id in session['seen_songs'] or len(alternatives) < 4
+
+	session['seen_songs'].append(q.id)
+	session.modified = True
 
 	lives = 3 - int(session.get('fails', 3))
 
