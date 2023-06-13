@@ -77,7 +77,7 @@
 				const chars = ['🟢','🔴','⚪'];
 				let stats = await fetch('/scores/stats').then(x => x.json());
 				let value = `Level:\t${level}\nScore:\t${score}\n` 
-					+ stats.map((l,i) => {
+					+ stats.fail_data.map((l,i) => {
 							return `Level ${i+1}\t` + l.map(q => chars[q-1]).join('');
 					}).join('\n')
 					+ '\nVisit hitQuiz.me and try to beat me.';
