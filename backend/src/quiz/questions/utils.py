@@ -11,7 +11,7 @@ def find_parts(t, p):
 			_tlen = len(_t)
 			if _tlen == plen and _t == p:
 				return True
-			elif _tlen < plen and _t[:_tlen] == p[:_tlen]:
+			elif _tlen < plen and _t == p[:_tlen]:
 				continue
 			else:
 				break
