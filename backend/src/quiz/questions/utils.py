@@ -9,11 +9,10 @@ def find_parts(t, p):
 		for j in range(i + 1, size + 1):
 			_t = delim.join(tokens[i:j])
 			_tlen = len(_t)
-			if _tlen > plen:
-				break
-			elif _tlen < plen:
+			if _tlen == plen and _t == p:
+				return True
+			elif _tlen < plen and _t[:_tlen] == p[:_tlen]:
 				continue
-			else: 
-				if _t == p:
-					return True
+			else:
+				break
 	return False
