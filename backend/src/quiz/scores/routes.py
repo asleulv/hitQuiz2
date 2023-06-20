@@ -58,7 +58,7 @@ def create():
 	score = None
 	if points >= 100 \
 		and 2 <= len(name) <= 20 \
-		and re.match(r'^[A-Za-z]+[A-Za-z\-\_]*[0-9]*', name): # $ missing but eliminates important characters.
+		and re.match(r'^[A-Za-zÀ-ž0-9.\-_]+(?: [A-Za-zÀ-ž0-9.\-_]+)*$', name): 
 		
 		score = Score(name=name, points=points)
 		db.session.add(score)
@@ -110,7 +110,7 @@ def stats():
 	d.append(l + [3 for _ in range(7 - len(l))])
 
 	# failed_hit_ids = list(set(session['seen_songs']) - set(session['qids']) - set([session['qid']]))
-	failed_hit_ids = session['fids']
+	failed_hit_ids = session.get('fids', [])
 	# failed_hits = Hit.query.filter(Hit.id.in_(failed_hit_ids)).all()
 	failed_hits = [Hit.query.get(id) for id in reversed(failed_hit_ids)]
 	hits_schema = HitSchema(many=True)

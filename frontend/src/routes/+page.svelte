@@ -77,7 +77,7 @@
 				const chars = ['🟢','🔴','⚪'];
 				let stats = await fetch('/scores/stats').then(x => x.json());
 				let value = `Level:\t${level}\nScore:\t${score}\n` 
-					+ stats.map((l,i) => {
+					+ stats.fail_data.map((l,i) => {
 							return `Level ${i+1}\t` + l.map(q => chars[q-1]).join('');
 					}).join('\n')
 					+ '\nVisit hitQuiz.me and try to beat me.';
@@ -162,8 +162,14 @@
 					<div>Score: <span in:fade={{ delay: 100, duration: 800 }}>{score}</span></div>
 				{/key}
 				{#key state}
-				<button class="i-btn" on:click={showModal} disabled={state == 0} title="Leaderboard"
-					transition:scale>i</button>
+				<button 
+					class="i-btn" 
+					class:highlighted={state > 1} 
+					on:click={showModal} 
+					disabled={state == 0} 
+					title="Additional Information"
+					transition:scale
+				>i</button>
 				{/key}
 			</div>
 		</div>
@@ -265,12 +271,6 @@
 		z-index: 1;
 	}
 
-	.brand {
-		font-weight: 750;
-		font-size: 1.8em;
-		margin-right: auto;
-	}
-
 	.brand2 {
 		font-weight: 750;
 		font-size: 1.4em;
@@ -281,21 +281,7 @@
 			0.05em 0.005em 0 rgba(0, 0, 0, 1), 0em 0.08em 0 rgba(0, 0, 0, 1),
 			0.05em 0.08em 0 rgba(0, 0, 0, 1), 0px -0.03em 0 rgba(0, 0, 0, 1),
 			-0.03em -0.03em 0 rgba(0, 0, 0, 1), -0.03em 0.08em 0 rgba(0, 0, 0, 1), -0.03em 0 0 rgba(0, 0, 0, 1);
-		
-		
-		
-}
-
-@keyframes bopB {
-  0% {
-    transform: scale(0.9);
-  }
-  80%,
-  100% {
-    transform: scale(1) rotateZ(-3deg);
-  }
-}
-
+	}
 
 	.score-wrapper {
 		display: flex;
@@ -324,19 +310,6 @@
 		transition: background-color 0.5s ease, font-weight 0.5s ease;
 	}
 
-	.i-btn {
-		height: 20px;
-		width: 20px;
-		padding: 0;
-		border: 1px solid white;
-		border-radius: 50%;
-		background-color: rgba(255,255,255,0.1);
-		color: white;
-		cursor: pointer;
-		z-index: 1;
-		transition: background-color 0.5s ease, font-weight 0.5s ease;
-	}
-
 	.i-btn:hover {
 		background-color: rgba(255,255,255,0.2);
 		font-weight: 600;
@@ -344,6 +317,26 @@
 
 	.i-btn[disabled] {
 		display: none;
+	}
+
+	.highlighted {
+		animation: pulse 2s infinite;
+	}
+
+	.highlighted:hover {
+		animation: none;
+	}
+
+	@keyframes pulse {
+	  0% {
+	    box-shadow: 0 0 0 0 rgba(255,255,255, 0.4);
+	  }
+	  70% {
+	    box-shadow: 0 0 0 0.64rem rgba(255,255,255, 0);
+	  }
+	  100% {
+	    box-shadow: 0 0 0 0 rgba(255,255,255, 0);
+	  }
 	}
 
 	.quest-form {
