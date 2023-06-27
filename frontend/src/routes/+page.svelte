@@ -151,15 +151,15 @@
 			<Timer bind:this={timer} on:stop={handleStop} />
 			<div class="score-wrapper">
 				{#key lives}
-					<div in:fade={{delay: 100, duration: 800}}>
+					<div in:fade|global={{delay: 100, duration: 800}}>
 						{#each {length: lives} as _}❤️{/each}
 					</div>
 				{/key}
 				{#key level}
-					<div>Level: <span in:scale={{ delay: 100, duration: 800 }}>{level}</span></div>
+					<div>Level: <span in:scale|global={{ delay: 100, duration: 800 }}>{level}</span></div>
 				{/key}
 				{#key score}
-					<div>Score: <span in:fade={{ delay: 100, duration: 800 }}>{score}</span></div>
+					<div>Score: <span in:fade|global={{ delay: 100, duration: 800 }}>{score}</span></div>
 				{/key}
 				{#key state}
 				<button 
@@ -168,7 +168,7 @@
 					on:click={showModal} 
 					disabled={state == 0} 
 					title="Additional Information"
-					transition:scale
+					transition:scale|global
 				>i</button>
 				{/key}
 			</div>
@@ -209,16 +209,16 @@
 				<div>
 					<div class="question-wrapper">
 						{#key data.question_info}
-							<h2 class="question-info" in:fade={{ duration: 800 }}>{data.question_info}</h2>
+							<h2 class="question-info" in:fade|global={{ duration: 800 }}>{data.question_info}</h2>
 						{/key}
 						{#key data.question}
-							<p class="titletext" in:fade={{ duration: 800 }}>{data.question}</p>
+							<p class="titletext" in:fade|global={{ duration: 800 }}>{data.question}</p>
 						{/key}
 					</div>
 					{#key data.answers}
 						<form class="quest-form" on:submit|preventDefault={handleSubmit}>
 							{#each Object.values(data.alternatives) as answer, i}
-								<button type="submit" value="{ answer }" in:scale={{ duration: 400, delay: i*100 }}>{answer}</button>
+								<button type="submit" value="{ answer }" in:scale|global={{ duration: 400, delay: i*100 }}>{answer}</button>
 							{/each}
 						</form>
 					{/key}

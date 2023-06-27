@@ -47,16 +47,16 @@
 	<div 
 		class="overlay" 
 		class:open={$modalOpen}
-		in:fade={{ duration: 400 }}
-		out:fade={{ duration: 400, delay: 500 }}
+		in:fade|global={{ duration: 400 }}
+		out:fade|global={{ duration: 400, delay: 500 }}
 	>
 		<div 
 			class="modal" 
 			style:background-color={$background} 
 			use:clickOutside 
 			on:outclick={hide} 
-			in:fly={{ y: -200, duration: 1000, delay: 400 }}
-			out:fly={{ y: -200, duration: 1000, delay: 0 }}
+			in:fly|global={{ y: -200, duration: 1000, delay: 400 }}
+			out:fly|global={{ y: -200, duration: 1000, delay: 0 }}
 		>
 			<span class="close" on:click={toggle}>&times;</span>
 			<slot name="title" />
