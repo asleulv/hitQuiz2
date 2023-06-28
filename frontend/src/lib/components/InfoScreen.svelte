@@ -5,7 +5,7 @@
 	export let success = false;
 </script>
 
-<div in:fade={{ duration: 800 }}>
+<div in:fade|global={{ duration: 800 }}>
 	{#if success}
 		<div class="confetti-overlay">
 			<Confetti 
